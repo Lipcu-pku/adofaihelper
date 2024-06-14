@@ -1,3 +1,29 @@
+"""
+A module to help with reading and processing `.adofai` files (in the rhythm game 'A Dance Of Fire And Ice'). 
+
+Author: [Lipcu](https://github.com/Lipcu-pku)
+
+Check Updates on https://github.com/Lipcu-pku/adofaihelper/tree/main
+
+---
+
+Examples: 
+
+Use `adofai(path)` to directly read the level at `path` and convert to a `ADOFAI` class. 
+
+There are several parameters in the `ADOFAI` class: `pathData`, `angleData`, `settings`, `settings_dict`, `actions`, `decorations`.
+
+As for the difference between `settings` and `settings_dict`, the former one have further parameters like `version`, `artist` and so on. The Latter one is just the `dict` of settings. 
+
+For lines in `actions` you can also use `action = ACTION(_action)` to get its further parameters, so does the `decorations`. 
+
+You can just use `AskForPath()` to show a window of opening the level. 
+
+You can use `SortActions()` to sort the actions in the order of the floor, as you can see in the default `.adofai` file. 
+
+You can use `ADOFAIprint()` to directly output the level in the `.adofai` format, except for the random extra commas in the actions.
+"""
+
 import json, os, re, sys
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
@@ -7,20 +33,27 @@ sys.modules["builtins"].__dict__['clearFormat'] = None
 sys.modules["builtins"].__dict__['boolean'] = None
 
 __all__ = [
-    'ADOFAI_read', 'pathData_to_angleData', 'AskForPath', 'adofai', 'ADOFAI_print'
+    'ADOFAI_read', 'pathData_to_angleData', 'AskForPath', 'adofai', 'ADOFAIprint', 'SortActions',
     'SETTINGS', 'ACTION', 'DECORATION', 'ADOFAI'
 ]
 
-def AskForPath() -> str:
+true = True
+false = False
+null = None
+
+default_icon_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'icon.ico')
+
+def AskForPath(icon_path: str = default_icon_path) -> str:
     """
     Select .adofai file
 
     ---
+    Parameters:
+        `icon_path`: the path of icon to be presented.
+    ---
     returns:
         .adofai file path
     """
-    cur_dir = os.path.dirname(os.path.realpath(__file__))
-    icon_path = os.path.join(cur_dir, 'icon.ico')
     root = Tk()
     root.iconbitmap(icon_path)
     root.withdraw()
@@ -161,106 +194,107 @@ def boolean(value: any) -> bool:
 
 class SETTINGS:
     def __init__(self, settings: dict):
-        self.version = settings['version']
-        self.artist = clearFormat(settings['artist'])
-        self.specialArtistType = settings.get('specialArtistType', "None")
-        self.artistPermission = settings.get('artistPermission', "")
-        self.artistLinks = settings.get('artistLinks', "")
+        self.version: int = settings['version']
+        self.artist: str = clearFormat(settings['artist'])
+        self.specialArtistType: str = settings.get('specialArtistType', "None")
+        self.artistPermission: str = settings.get('artistPermission', "")
+        self.artistLinks: str = settings.get('artistLinks', "")
 
-        self.song = clearFormat(settings['song'])
-        self.songFilename = settings['songFilename']
-        self.author = clearFormat(settings['author'])
+        self.song: str = clearFormat(settings['song'])
+        self.songFilename: str = settings['songFilename']
+        self.author: str = clearFormat(settings['author'])
 
-        self.previewImage = settings.get('previewImage', "")
-        self.previewIcon = settings.get('previewIcon', "")
-        self.previewIconColor = settings.get('previewIconColor', "")
-        self.previewSongStart = settings.get('previewSongStart', "")
-        self.previewSongDuration = settings.get('previewSongDuration', "")
+        self.previewImage: str = settings.get('previewImage', "")
+        self.previewIcon: str = settings.get('previewIcon', "")
+        self.previewIconColor: str = settings.get('previewIconColor', "")
+        self.previewSongStart: str = settings.get('previewSongStart', "")
+        self.previewSongDuration: str = settings.get('previewSongDuration', "")
 
-        self.seizureWarning = boolean(settings.get('seizureWarning', False))
+        self.seizureWarning: bool = boolean(settings.get('seizureWarning', False))
 
-        self.levelDesc = settings.get('levelDesc', "")
-        self.levelTags = settings.get('levelTags', "")
+        self.levelDesc: str = settings.get('levelDesc', "")
+        self.levelTags: str = settings.get('levelTags', "")
         
-        self.speedTrialAim = settings.get('speedTrialAim', 1.0)
-        self.difficulty = settings.get('difficulty', "")
-        self.requiredMods = settings.get('requiredMods', [])
+        self.speedTrialAim: float = settings.get('speedTrialAim', 1.0)
+        self.difficulty: str = settings.get('difficulty', "")
+        self.requiredMods: list = settings.get('requiredMods', [])
 
-        self.bpm = settings['bpm']
-        self.volume = settings['volume']
-        self.offset = settings['offset']
-        self.pitch = settings['pitch']
-        self.hitsound = settings['hitsound']
-        self.hitsoundVolume = settings['hitsoundVolume']
-        self.countdownTicks = settings.get('countdownTicks', 4)
-        self.separateCountdownTime = boolean(settings['separateCountdownTime'])
+        self.bpm: float = settings['bpm']
+        self.volume: int = settings['volume']
+        self.offset: int = settings['offset']
+        self.pitch: int = settings['pitch']
+        self.hitsound: str = settings['hitsound']
+        self.hitsoundVolume: int = settings['hitsoundVolume']
+        self.countdownTicks: int = settings.get('countdownTicks', 4)
+        self.separateCountdownTime: bool = boolean(settings['separateCountdownTime'])
 
-        self.trackColorType = settings['trackColorType']
-        self.trackColor = settings['trackColor']
-        self.secondaryTrackColor = settings['secondaryTrackColor']
-        self.trackColorAnimDuration = settings.get('trackColorAnimDuration', 2)
-        self.trackColorPulse = settings.get('trackColorPulse', "None")
-        self.trackPulseLength = settings.get('trackPulseLength', 10)
-        self.trackStyle = settings['trackStyle']
-        self.trackTexture = settings.get('trackTexture', '')
-        self.trackTextureScale = settings.get('trackTextureScale', 1)
-        self.trackGlowIntensity = settings.get('trackGlowIntensity', 100)
-        self.trackAnimation = settings['trackAnimation']
-        self.beatsAhead = settings.get('beatsAhead', 4)
-        self.trackDisappearAnimation = settings['trackDisappearAnimation']      
-        self.beatsBehind = settings.get('beatsBehind', 4)
+        self.trackColorType: str = settings['trackColorType']
+        self.trackColor: str = settings['trackColor']
+        self.secondaryTrackColor: str = settings['secondaryTrackColor']
+        self.trackColorAnimDuration: float = settings.get('trackColorAnimDuration', 2)
+        self.trackColorPulse: str = settings.get('trackColorPulse', "None")
+        self.trackPulseLength: int = settings.get('trackPulseLength', 10)
+        self.trackStyle: str = settings['trackStyle']
+        self.trackTexture: str = settings.get('trackTexture', '')
+        self.trackTextureScale: float = settings.get('trackTextureScale', 1)
+        self.trackGlowIntensity: int = settings.get('trackGlowIntensity', 100)
+        self.trackAnimation: str = settings['trackAnimation']
+        self.beatsAhead: float = settings.get('beatsAhead', 4)
+        self.trackDisappearAnimation: str = settings['trackDisappearAnimation']      
+        self.beatsBehind: float = settings.get('beatsBehind', 4)
 
-        self.backgroundColor = settings['backgroundColor']
-        self.showDefaultBGIfNoImage = boolean(settings.get('showDefaultBGIfNoImage', True))
-        self.showDefaultBGTile = settings.get('showDefaultBGTile', False)
-        self.defaultBGTileColor = settings.get('defaultBGTileColor', '101121')
-        self.defaultBGShapeType = settings.get('defaultBGShapeType', 'Disabled')
-        self.defaultBGShapeColor = settings.get('defaultBGShapeColor', 'ffffff')
-        self.bgImage = settings['bgImage']
-        self.bgImageColor = settings['bgImageColor']
-        self.parallax = settings.get('parallax', 100)
-        self.bgDisplayMode = settings.get('bgDisplayMode', 'FitToScreen')
-        self.imageSmoothing = settings.get('imageSmoothing', True)
-        self.lockRot = boolean(settings.get('lockRot', False))
-        self.loopBG = boolean(settings.get('loopBG', False))
-        self.scalingRatio = settings.get('scalingRatio', settings.get('unscaledSize', 100))
-        self.relativeTo = settings.get('relativeTo', "Player")
-        self.position = settings.get('position', [0, 0])
-        self.rotation = settings.get('rotation', 0)
-        self.zoom = settings.get('zoom', 100)
+        self.backgroundColor: str = settings['backgroundColor']
+        self.showDefaultBGIfNoImage: bool = boolean(settings.get('showDefaultBGIfNoImage', True))
+        self.showDefaultBGTile: bool = settings.get('showDefaultBGTile', False)
+        self.defaultBGTileColor: str = settings.get('defaultBGTileColor', '101121')
+        self.defaultBGShapeType: str = settings.get('defaultBGShapeType', 'Disabled')
+        self.defaultBGShapeColor: str = settings.get('defaultBGShapeColor', 'ffffff')
+        self.bgImage: str = settings['bgImage']
+        self.bgImageColor: str = settings['bgImageColor']
+        self.parallax: int = settings.get('parallax', 100)
+        self.bgDisplayMode: str = settings.get('bgDisplayMode', 'FitToScreen')
+        self.imageSmoothing: bool = boolean(settings.get('imageSmoothing', True))
+        self.lockRot: bool = boolean(settings.get('lockRot', False))
+        self.loopBG: str = boolean(settings.get('loopBG', False))
+        self.scalingRatio: int = settings.get('scalingRatio', settings.get('unscaledSize', 100))
+        self.relativeTo: str = settings.get('relativeTo', "Player")
+        self.position: list[float] = settings.get('position', [0, 0])
+        self.rotation: float = settings.get('rotation', 0)
+        self.zoom: float = settings.get('zoom', 100)
 
-        self.bgVideo = settings.get('bgVideo', '')
-        self.loopVideo = boolean(settings.get('loopVideo', False))
-        self.vidOffset = settings.get('vidOffset', 0)
+        self.bgVideo: str = settings.get('bgVideo', '')
+        self.loopVideo: bool = boolean(settings.get('loopVideo', False))
+        self.vidOffset: int = settings.get('vidOffset', 0)
         
-        self.pulseOnFloor = settings.get('pulseOnFloor', True)
-        self.floorIconOutlines = boolean(settings.get('floorIconOutlines', False))
-        self.stickToFloors = boolean(settings.get('stickToFloors', True))
+        self.pulseOnFloor: bool = settings.get('pulseOnFloor', True)
+        self.floorIconOutlines: bool = boolean(settings.get('floorIconOutlines', False))
+        self.stickToFloors: bool = boolean(settings.get('stickToFloors', True))
 
-        self.planetEase = settings.get('planetEase', 'Linear')
-        self.planetEaseParts = settings.get('planetEaseParts', 1)
-        self.planetEasePartBehavior = settings.get('planetEasePartBehavior', 'Mirror')
+        self.planetEase: str = settings.get('planetEase', 'Linear')
+        self.planetEaseParts: int = settings.get('planetEaseParts', 1)
+        self.planetEasePartBehavior: str = settings.get('planetEasePartBehavior', 'Mirror')
 
-        self.defaultTextColor = settings.get('defaultTextColor', 'ffffff')
-        self.defaultTextShadowColor = settings.get('defaultTextShadowColor', '00000050')
-        self.congratsText = settings.get('congratsText', '')
-        self.perfectText = settings.get('perfectText', '')
+        self.defaultTextColor: str = settings.get('defaultTextColor', 'ffffff')
+        self.defaultTextShadowColor: str = settings.get('defaultTextShadowColor', '00000050')
+        self.congratsText: str = settings.get('congratsText', '')
+        self.perfectText: str = settings.get('perfectText', '')
 
-        self.legacyFlash = boolean(settings.get('legacyFlash', False))
-        self.legacyCamRelativeTo = boolean(settings.get('legacyCamRelativeTo', False))
-        self.legacySpriteTiles = boolean(settings.get('legacySpriteTiles', False))
+        self.legacyFlash: bool = boolean(settings.get('legacyFlash', False))
+        self.legacyCamRelativeTo: bool = boolean(settings.get('legacyCamRelativeTo', False))
+        self.legacySpriteTiles: bool = boolean(settings.get('legacySpriteTiles', False))
+        self.legacyTween: bool = boolean(settings.get('legacyTween', True))
 
 class ACTION:
     def __init__(self, action: dict):
-        self.floor = action['floor']
-        self.eventType = action['eventType']
+        self.floor: int = action['floor']
+        self.eventType: str = action['eventType']
     
         # SetSpeed
         if self.eventType == 'SetSpeed':
-            self.speedType = action.get('speedType', 'Bpm')
-            self.beatsPerMinute = action['beatsPerMinute'] if self.speedType == 'Bpm' else None
-            self.bpmMultiplier = action.get('bpmMultiplier', 1) if self.speedType == 'Multiplier' else None
-            self.angleOffset = action.get('angleOffset', 0)
+            self.speedType: float = action.get('speedType', 'Bpm')
+            self.beatsPerMinute: str = action['beatsPerMinute'] if self.speedType == 'Bpm' else None
+            self.bpmMultiplier: float = action.get('bpmMultiplier', 1) if self.speedType == 'Multiplier' else None
+            self.angleOffset: float = action.get('angleOffset', 0)
 
         # Twirl
         elif self.eventType == 'Twirl':
@@ -268,108 +302,108 @@ class ACTION:
         
         # Checkpoint
         elif self.eventType == 'Checkpoint':
-            self.tileOffset = action.get('tileOffset', 0)
+            self.tileOffset: int = action.get('tileOffset', 0)
 
         # SetHitsound
         elif self.eventType == 'SetHitSound':
-            self.gameSound = action.get('gameSound', 'hitsound')
-            self.hitsound = action['hitsound']
-            self.hitsoundVolume = action['hitsoundVolume']
+            self.gameSound: str = action.get('gameSound', 'hitsound')
+            self.hitsound: str = action['hitsound']
+            self.hitsoundVolume: int = action['hitsoundVolume']
         
         # PlaySound
         elif self.eventType == 'PlaySound':
-            self.hitsound = action['hitsound']
-            self.hitsoundVolume = action['hitsoundVolume']
-            self.angleOffset = action.get('angleOffset', 0)
-            self.eventTag = action['eventTag']
+            self.hitsound: str = action['hitsound']
+            self.hitsoundVolume: int = action['hitsoundVolume']
+            self.angleOffset: float = action.get('angleOffset', 0)
+            self.eventTag: str = action['eventTag']
         
         # SetPlanetRotation
         elif self.eventType == 'SetPlanetRotation':
-            self.ease = action['ease']
-            self.easeParts = action['easeParts']
-            self.easePartsBehavior = action.get('easePartsBehavior', 'Mirror')
+            self.ease: str = action['ease']
+            self.easeParts: int = action['easeParts']
+            self.easePartsBehavior: str = action.get('easePartsBehavior', 'Mirror')
         
         # Pause
         elif self.eventType == 'Pause':
-            self.duration = action['duration']
-            self.countdownTicks = action['countdownTicks']
-            self.angleCorrectionDir = action['angleCorrectionDir']
+            self.duration: float = action['duration']
+            self.countdownTicks: int = action['countdownTicks']
+            self.angleCorrectionDir: int = action['angleCorrectionDir']
 
         # AutoPlayTiles
         elif self.eventType == 'AutoPlayTiles':
-            self.enabled = boolean(action['enabled'])
-            self.showStatusText = action['showStatusText']
-            self.safetyTiles = action['safetyTiles']
+            self.enabled: bool = boolean(action['enabled'])
+            self.showStatusText: bool = boolean(action['showStatusText'])
+            self.safetyTiles: bool = boolean(action.get('safetyTiles', False))
 
         # ScalePlanets
         elif self.eventType == 'ScalePlanets':
-            self.duration = action['duration']
-            self.targetPlanet = action['targetPlanet']
-            self.scale = action['scale']
-            self.angleOffset = action['angleOffset']
-            self.ease = action['ease']
-            self.eventTag = action['eventTag']
+            self.duration: float = action['duration']
+            self.targetPlanet: str = action['targetPlanet']
+            self.scale: float = action['scale']
+            self.angleOffset: float = action['angleOffset']
+            self.ease: str = action['ease']
+            self.eventTag: str = action['eventTag']
 
         # ColorTrack
         elif self.eventType == 'ColorTrack':
-            self.trackColorType = action['trackColorType']
-            self.trackColor = action['trackColor']
-            self.secondaryTrackColor = action['secondaryTrackColor']
-            self.trackColorAnimDuration = action['trackColorAnimDuration']
-            self.trackColorPulse = action['trackColorPulse']
-            self.trackPulseLength = action['trackPulseLength']
-            self.trackStyle = action['trackStyle']
-            self.trackTexture = action['trackTexture']
-            self.trackTextureScale = action['trackTextureScale']
-            self.trackGlowIntensity = action['trackGlowIntensity']
+            self.trackColorType: str = action['trackColorType']
+            self.trackColor: str = action['trackColor']
+            self.secondaryTrackColor: str = action['secondaryTrackColor']
+            self.trackColorAnimDuration: float = action['trackColorAnimDuration']
+            self.trackColorPulse: str = action['trackColorPulse']
+            self.trackPulseLength: int = action['trackPulseLength']
+            self.trackStyle: str = action['trackStyle']
+            self.trackTexture: str = action['trackTexture']
+            self.trackTextureScale: float = action['trackTextureScale']
+            self.trackGlowIntensity: int = action['trackGlowIntensity']
             if 'floorIconOutlines' in action:
-                self.floorIconOutlines = action['floorIconOutlines']
+                self.floorIconOutlines: bool = boolean(action['floorIconOutlines'])
 
         # AnimateTrack
         elif self.eventType == 'AnimateTrack':
             if 'trackAnimation' in action:
-                self.trackAnimation = action['trackAnimation']
-                self.beatsAhead = action['beatsAhead']
+                self.trackAnimation: str = action['trackAnimation']
+                self.beatsAhead: float = action['beatsAhead']
             if 'trackDisappearAnimation' in action:
-                self.trackDisappearAnimation = action['trackDisappearAnimation']
-                self.beatsBehind = action['beatsBehind']
+                self.trackDisappearAnimation: str = action['trackDisappearAnimation']
+                self.beatsBehind: float = action['beatsBehind']
 
         # RecolorTrack
         elif self.eventType == 'RecolorTrack':
-            self.startTile = action['startTile']
-            self.endTile = action['endTile']
-            self.gapLength = action.get('gapLength', 0)
-            self.duration = action.get('duration', 0)
-            self.trackColorType = action['trackColorType']
-            self.trackColor = action['trackColor']
-            self.secondaryTrackColor = action['secondaryTrackColor']
-            self.trackColorAnimDuration = action['trackColorAnimDuration']
-            self.trackColorPulse = action['trackColorPulse']
-            self.trackPulseLength = action['trackPulseLength']
-            self.trackStyle = action['trackStyle']
-            self.trackGlowIntensity = action.get('trackGlowIntensity', 100)
-            self.angleOffset = action['angleOffset']
-            self.ease = action.get('ease', 'Linear')
-            self.eventTag = action['eventTag']
+            self.startTile: list = action['startTile']
+            self.endTile: list = action['endTile']
+            self.gapLength: int = action.get('gapLength', 0)
+            self.duration: float = action.get('duration', 0)
+            self.trackColorType: str = action['trackColorType']
+            self.trackColor: str = action['trackColor']
+            self.secondaryTrackColor: str = action['secondaryTrackColor']
+            self.trackColorAnimDuration: str = action['trackColorAnimDuration']
+            self.trackColorPulse: str = action['trackColorPulse']
+            self.trackPulseLength: int = action['trackPulseLength']
+            self.trackStyle: str = action['trackStyle']
+            self.trackGlowIntensity: int = action.get('trackGlowIntensity', 100)
+            self.angleOffset: float = action['angleOffset']
+            self.ease: str = action.get('ease', 'Linear')
+            self.eventTag: str = action['eventTag']
 
         # MoveTrack
         elif self.eventType == 'MoveTrack':
-            self.startTile = action['startTile']
-            self.endTile = action['endTile']
-            self.gapLength = action.get('gapLength', 0)
-            self.duration = action['duration']
-            self.positionOffset = action['positionOffset']
+            self.startTile: list = action['startTile']
+            self.endTile: list = action['endTile']
+            self.gapLength: int = action.get('gapLength', 0)
+            self.duration: float = action['duration']
+            self.positionOffset: list = action.get('positionOffset', [None, None])
             if 'rotationOffset' in action:
-                self.rotationOffset = action['rotationOffset']
+                self.rotationOffset: float = action['rotationOffset']
             if 'scale' in action:
-                self.scale = action['scale']
+                self.scale: list[float] = action['scale']
             if 'opacity' in action:
-                self.scale = action['opacity']
-            self.angleOffset = action['angleOffset']
-            self.ease = action['ease']
+                self.opacity: float = action['opacity']
+            self.angleOffset: float = action['angleOffset']
+            self.ease: str = action['ease']
             if 'maxVfxOnly' in action:
-                self.maxVfxOnly = action['maxVfxOnly']
-            self.eventTag = action['eventTag']
+                self.maxVfxOnly: bool = boolean(action['maxVfxOnly'])
+            self.eventTag: str = action['eventTag']
 
         # PositionTrack
         elif self.eventType == 'PositionTrack':
@@ -749,14 +783,31 @@ class ADOFAI:
         self.pathData = contents['pathData'] if 'pathData' in contents else None
         self.angleData = pathData_to_angleData(contents['pathData']) if 'pathData' in contents else contents['angleData']
         # settings of the level
-        self.settings = contents['settings']
-        self.setting = SETTINGS(contents['settings'])
+        self.settings_dict = contents['settings']
+        self.settings = SETTINGS(contents['settings'])
         # events in this level
         self.actions = contents['actions']
         # decorations in this level
         self.decorations = contents.get('decorations', [])
 
-def ADOFAI_print(level: ADOFAI, path: str, info: bool = False) -> None:
+def SortActions(actions: list)->list:
+    """
+    To sort the `<list>` actions in the order of the floor, as in the default .adofai file
+
+    ---
+    Parameters:
+        `actions`: the actions `<list>` to be sorted
+    
+    ---
+    Returns:
+        the sorted actions `<list>`
+    
+    
+    """
+    actions.sort(key = lambda x: ACTION(x).floor)
+    return actions
+
+def ADOFAIprint(level: ADOFAI, path: str, info: bool = True) -> None:
     """
     print level in `.adofai` form
 
@@ -764,34 +815,46 @@ def ADOFAI_print(level: ADOFAI, path: str, info: bool = False) -> None:
     Parameters:
         `level`: `<ADOFAI>`, level to print
         `path`: path to print
+        `info`: some warnings and infomation. 
     """
     angleData = level.angleData
-    settings = level.settings
+    settings = level.settings_dict
     actions = level.actions
     decorations = level.decorations
     output = f'''{{\n\t\"angleData\": {angleData},\n'''
 
     output += '\t\"settings\": \n\t{\n'
     for setting in settings:
-        output += f'\t\t\"{setting}\": {json.dumps(settings[setting])}, \n'
-    output = output.rstrip(', \n') + '\n'
+        space = ' ' if setting in ['version', 'legacyFlash', 'legacyCamRelativeTo', 'legacySpriteTiles', 'legacyTween'] else ''
+        output += f'\t\t\"{setting}\": {json.dumps(settings[setting])}{space},\n'
+    output = output.rstrip(',\n') + '\n'
     output += '\t},\n'
     
-    output += '\t\"actions\": \n\t{\n'
+    output += '\t\"actions\": \n\t[\n'
     for action in actions:
-        output += f'\t\t{json.dumps(action)}, \n'
-    output = output.rstrip(', \n') + '\n'
-    output += '\t},\n'
+        # extracomma = '' if action["eventType"] in ['SetSpeed', 'Twirl', 'SetText', 'SetHitsound', 'PlaySound', 'Hide', 'Pause', 'Hold'] else ','
+        line = '{ ' + json.dumps(action).lstrip('{').rstrip('}') + ' }'
+        output += f'\t\t{line},\n'
+    output = output.rstrip(',\n') + '\n'
+    output += '\t],\n'
 
-    output += '\t\"decorations\": \n\t{\n'
+    output += '\t\"decorations\": \n\t[\n'
     for decoration in decorations:
-        output += f'\t\t{json.dumps(decoration)}, \n'
-    output = output.rstrip(', \n') + '\n'
-    output += '\t}\n}'
+        line = '{ ' + json.dumps(decoration).lstrip('{').rstrip('}') + '  }'
+        output += f'\t\t{line},\n'
+    output = output.rstrip(',\n') + '\n'
+    output += '\t]\n}'
 
-    print(output, file=open(path, 'w', encoding='utf-8-sig'))
     if info:
-        print(f'Exported to {path}. ')
+        if os.path.exists(path):
+            if input(f'{path} already exists. Do you want to overwrite it? Yes / [No] ') == 'Yes':
+                print(output, file=open(path, 'w', encoding='utf-8-sig'))
+                print(f'Exported to {path}. ')
+            else:
+                print('Canceled. ')
+                return
+    else:
+        print(output, file=open(path, 'w', encoding='utf-8-sig'))
 
 def adofai(FILE_PATH: str) -> ADOFAI|None:
     """
