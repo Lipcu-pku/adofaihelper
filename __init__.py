@@ -1,10 +1,6 @@
 """
 A module to help with reading and processing `.adofai` files (in the rhythm game 'A Dance Of Fire And Ice'). 
 
-Author: [Lipcu](https://github.com/Lipcu-pku)
-
-Check Updates on https://github.com/Lipcu-pku/adofaihelper/tree/main
-
 ---
 
 Examples: 
@@ -27,6 +23,7 @@ You can use `ADOFAIprint()` to directly output the level in the `.adofai` format
 import json, os, re, sys
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
+from adofaihelper.constants import *
 
 # Prohibit calls to the following funcs
 sys.modules["builtins"].__dict__['clearFormat'] = None
@@ -92,6 +89,16 @@ def ADOFAI_read(FILE_PATH: str) -> dict|None:
         return
     try:
         contents = open(FILE_PATH, 'r', encoding='utf-8-sig').read()
+        inequto = False
+        truects = ''
+        for char in contents:
+            if char == '\"':
+                inequto = ~inequto
+            if char == '\n':
+                if inequto:
+                    truects += '\\n'
+                    continue
+            truects += char
         correction = {
             ", }": "}",
             ",  }": "}",
@@ -103,7 +110,7 @@ def ADOFAI_read(FILE_PATH: str) -> dict|None:
             "\n\\n": "\\n"
         }
         for c in correction:
-            contents = contents.replace(c, correction[c])
+            contents = truects.replace(c, correction[c])
         content_dict = json.loads(contents)
         return content_dict
     except FileNotFoundError:
@@ -780,7 +787,7 @@ class DECORATION:
 class ADOFAI:
     def __init__(self, contents: dict):
         # pathData or angleData in the level
-        self.pathData = contents['pathData'] if 'pathData' in contents else None
+        self.pathData = contents.get('pathData', None)
         self.angleData = pathData_to_angleData(contents['pathData']) if 'pathData' in contents else contents['angleData']
         # settings of the level
         self.settings_dict = contents['settings']
@@ -853,6 +860,8 @@ def ADOFAIprint(level: ADOFAI, path: str, info: bool = True) -> None:
             else:
                 print('Canceled. ')
                 return
+        else:
+            print(output, file=open(path, 'w', encoding='utf-8-sig'))
     else:
         print(output, file=open(path, 'w', encoding='utf-8-sig'))
 
@@ -869,3 +878,5 @@ def adofai(FILE_PATH: str) -> ADOFAI|None:
         Converted `<ADOFAI>`, or `None` due to certain Error
     """
     return ADOFAI(ADOFAI_read(FILE_PATH))
+
+
