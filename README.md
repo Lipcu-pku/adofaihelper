@@ -1,6 +1,6 @@
 # adofaihelper
 
-put it into your `<Python Install Path>/Lib/adofaihelper` so you can use it as a module
+put it into your `<Python Install Path>/Lib/adofaihelper` or `<Project Path>/adofaihelper` so you can use it as a module
 
 ---
 
