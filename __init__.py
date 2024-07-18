@@ -38,8 +38,6 @@ true = True
 false = False
 null = None
 
-default_icon_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'icon.ico')
-
 class ADOFAIParser:
     # This part is writen by GPT-4o
 
@@ -173,7 +171,6 @@ def AskForPath() -> str:
         .adofai file path
     """
     root = Tk()
-    root.iconbitmap()
     root.withdraw()
     return askopenfilename(filetypes=[("ADOFAI files", "*.adofai"), ("ADOFAI files", "*.ADOFAI")])
 
@@ -182,7 +179,6 @@ def SaveAsPath() -> str:
     Select .adofai file saving path
     """
     root = Tk()
-    root.iconbitmap()
     root.withdraw()
     return asksaveasfilename(filetypes=[("ADOFAI files", "*.adofai"), ("ADOFAI files", "*.ADOFAI")])
 
