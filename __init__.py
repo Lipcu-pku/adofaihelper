@@ -23,7 +23,6 @@ You can use `ADOFAIprint()` to directly output the level in the `.adofai` format
 import json, os, sys
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
-from adofaihelper.constants import *
 
 # Prohibit calls to the following funcs
 sys.modules["builtins"].__dict__['clearFormat'] = None
