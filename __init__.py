@@ -22,7 +22,7 @@ You can use `ADOFAIprint()` to directly output the level in the `.adofai` format
 
 import json, os, re, sys
 from tkinter import Tk
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilename, asksaveasfilename
 from adofaihelper.constants import *
 
 # Prohibit calls to the following funcs
@@ -40,7 +40,128 @@ null = None
 
 default_icon_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'icon.ico')
 
-def AskForPath(icon_path: str = default_icon_path) -> str:
+class ADOFAIParser:
+    # This part is writen by GPT-4o
+
+    def __init__(self, adofai_string):
+        self.adofai_string = adofai_string
+        self.index = 0
+
+    def parse(self):
+        self._skip_whitespace()
+        value = self._parse_value()
+        self._skip_whitespace()
+        if self.index != len(self.adofai_string):
+            raise ValueError("Extra data")
+        return value
+
+    def _skip_whitespace(self):
+        while self.index < len(self.adofai_string) and self.adofai_string[self.index].isspace():
+            self.index += 1
+
+    def _parse_value(self):
+        if self.index >= len(self.adofai_string):
+            raise ValueError("Unexpected end of input")
+        char = self.adofai_string[self.index]
+        if char == '"':
+            return self._parse_string()
+        elif char == '{':
+            return self._parse_object()
+        elif char == '[':
+            return self._parse_array()
+        elif char in '-0123456789':
+            return self._parse_number()
+        elif self.adofai_string[self.index:self.index+4] == "true":
+            self.index += 4
+            return True
+        elif self.adofai_string[self.index:self.index+5] == "false":
+            self.index += 5
+            return False
+        elif self.adofai_string[self.index:self.index+4] == "null":
+            self.index += 4
+            return None
+        else:
+            raise ValueError(f"Unexpected character: {char}")
+
+    def _parse_string(self):
+        self.index += 1  # Skip the opening quote
+        start_index = self.index
+        while self.index < len(self.adofai_string):
+            char = self.adofai_string[self.index]
+            if char == '"':
+                if self.index > start_index and self.adofai_string[self.index - 1] == '\\':
+                    # Skip escaped quote
+                    self.index += 1
+                    continue
+                value = self.adofai_string[start_index:self.index]
+                self.index += 1  # Skip the closing quote
+                return value.replace('\n', '')
+            elif char == '\\':
+                self.index += 2  # Skip escaped character
+            else:
+                self.index += 1
+        raise ValueError("Unterminated string")
+
+    def _parse_number(self):
+        start_index = self.index
+        if self.adofai_string[self.index] == '-':
+            self.index += 1
+        while self.index < len(self.adofai_string) and self.adofai_string[self.index].isdigit():
+            self.index += 1
+        if self.index < len(self.adofai_string) and self.adofai_string[self.index] == '.':
+            self.index += 1
+            if not self.adofai_string[self.index].isdigit():
+                raise ValueError("Invalid number")
+            while self.index < len(self.adofai_string) and self.adofai_string[self.index].isdigit():
+                self.index += 1
+        if self.index < len(self.adofai_string) and self.adofai_string[self.index] in 'eE':
+            self.index += 1
+            if self.adofai_string[self.index] in '+-':
+                self.index += 1
+            if not self.adofai_string[self.index].isdigit():
+                raise ValueError("Invalid number")
+            while self.index < len(self.adofai_string) and self.adofai_string[self.index].isdigit():
+                self.index += 1
+        number_str = self.adofai_string[start_index:self.index]
+        return int(number_str) if '.' not in number_str and 'e' not in number_str and 'E' not in number_str else float(number_str)
+
+    def _parse_array(self):
+        self.index += 1  # Skip the opening bracket
+        array = []
+        self._skip_whitespace()
+        while self.index < len(self.adofai_string) and self.adofai_string[self.index] != ']':
+            self._skip_whitespace()
+            array.append(self._parse_value())
+            self._skip_whitespace()
+            if self.index < len(self.adofai_string) and self.adofai_string[self.index] == ',':
+                self.index += 1
+                self._skip_whitespace()
+        self.index += 1  # Skip the closing bracket
+        return array
+
+    def _parse_object(self):
+        self.index += 1  # Skip the opening brace
+        obj = {}
+        self._skip_whitespace()
+        while self.index < len(self.adofai_string) and self.adofai_string[self.index] != '}':
+            self._skip_whitespace()
+            if self.adofai_string[self.index] == '"':
+                key = self._parse_string()
+                self._skip_whitespace()
+                if self.adofai_string[self.index] != ':':
+                    raise ValueError("Expected ':'")
+                self.index += 1  # Skip the colon
+                self._skip_whitespace()
+                obj[key] = self._parse_value()
+                self._skip_whitespace()
+                if self.index < len(self.adofai_string) and self.adofai_string[self.index] == ',':
+                    self.index += 1
+                    self._skip_whitespace()
+        self.index += 1  # Skip the closing brace
+        return obj
+
+# def AskForPath(icon_path: str = default_icon_path) -> str:
+def AskForPath() -> str:
     """
     Select .adofai file
 
@@ -52,9 +173,18 @@ def AskForPath(icon_path: str = default_icon_path) -> str:
         .adofai file path
     """
     root = Tk()
-    root.iconbitmap(icon_path)
+    root.iconbitmap()
     root.withdraw()
     return askopenfilename(filetypes=[("ADOFAI files", "*.adofai"), ("ADOFAI files", "*.ADOFAI")])
+
+def SaveAsPath() -> str:
+    """
+    Select .adofai file saving path
+    """
+    root = Tk()
+    root.iconbitmap()
+    root.withdraw()
+    return asksaveasfilename(filetypes=[("ADOFAI files", "*.adofai"), ("ADOFAI files", "*.ADOFAI")])
 
 def path_split(FILE_PATH: str) -> tuple:
     """
@@ -70,7 +200,7 @@ def path_split(FILE_PATH: str) -> tuple:
     """
     level_dir, level = os.path.split(FILE_PATH)
     level_name, extension = os.path.splitext(level)
-    return level_dir, level_name, extension
+    return level_dir, level_name
 
 def ADOFAI_read(FILE_PATH: str) -> dict|None:
     """
@@ -83,52 +213,7 @@ def ADOFAI_read(FILE_PATH: str) -> dict|None:
     Returns:
         a `<dict>` of the content, or `None` due to certain Error.
     """
-    fname, extension = os.path.splitext(FILE_PATH)
-    if extension not in ['.adofai', '.ADOFAI']:
-        print(f'\033[91m[ERROR] The file at \033[93m\033[4m{FILE_PATH}\033[0m\033[91m is not an .adofai file. \033[0m')
-        return
-    try:
-        contents = open(FILE_PATH, 'r', encoding='utf-8-sig').read()
-        inequto = False
-        truects = ''
-        for char in contents:
-            if char == '\"':
-                inequto = ~inequto
-            if char == '\n':
-                if inequto:
-                    truects += '\\n'
-                    continue
-            truects += char
-        correction = {
-            ", }": "}",
-            ",  }": "}",
-            "]\n\t\"decorations\"": "],\n\t\"decorations\"",
-            "],\n}": "]\n}",
-            ",,": ",",
-            "}\n\t\t{": "},\n\t\t{",
-            "},\n\t]": "}\n\t]",
-            "\n\\n": "\\n"
-        }
-        for c in correction:
-            contents = truects.replace(c, correction[c])
-        content_dict = json.loads(contents)
-        return content_dict
-    except FileNotFoundError:
-        print(f'\033[91m[ERROR] The file at \033[93m\033[4m{FILE_PATH}\033[0m\033[91m do not exist. \033[0m')
-    except PermissionError:
-        print(f'\033[91m[ERROR] No permission to view the file at \033[93m\033[4m{FILE_PATH}\033[0m\033[91m. \033[0m')
-    except SyntaxError:
-        print(f'\033[91m[ERROR] Syntax Error Exists in \033[93m\033[4m{FILE_PATH}\033[0m\033[91m. \033[0m')
-    except json.decoder.JSONDecodeError as e:
-        print(f'\033[91m[ERROR] JSONDecodeError Exists in \033[93m\033[4m{FILE_PATH}\033[0m\033[91m. \033[0m')
-        e=str(e)
-        ErrorName, ErrorPlace = e.split(': ')
-        pos = [int(i.group()) for i in re.finditer(r'\d+',ErrorPlace)]
-        line, column, char = tuple(pos)
-        lines = contents.split('\n')
-        Error_line = lines[line-1]
-        fore, error, behind = Error_line[:column-1], Error_line[column-1], Error_line[column:]
-        print(f'\033[2m> line {line} | \033[0m{fore}\033[0m\033[91m{error}\033[90m{behind}\033[0m')
+    return ADOFAIParser(open(FILE_PATH, 'r', encoding='utf-8-sig').read()).parse()
 
 def pathData_to_angleData(pathData: str) -> list:
     """
