@@ -30,7 +30,7 @@ sys.modules["builtins"].__dict__['clearFormat'] = None
 sys.modules["builtins"].__dict__['boolean'] = None
 
 __all__ = [
-    'ADOFAI_read', 'pathData_to_angleData', 'AskForPath', 'adofai', 'ADOFAIprint', 'SortActions',
+    'ADOFAI_read', 'pathData_to_angleData', 'AskForPath', 'adofai', 'ADOFAI_print', 'SortActions',
     'SETTINGS', 'ACTION', 'DECORATION', 'ADOFAI'
 ]
 
@@ -899,7 +899,7 @@ def SortActions(actions: list)->list:
     actions.sort(key = lambda x: ACTION(x).floor)
     return actions
 
-def ADOFAIprint(level: ADOFAI, path: str, info: bool = True) -> None:
+def ADOFAI_print(level: ADOFAI, path: str, info: bool = True) -> None:
     """
     print level in `.adofai` form
 
