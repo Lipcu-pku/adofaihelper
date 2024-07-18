@@ -20,7 +20,7 @@ You can use `SortActions()` to sort the actions in the order of the floor, as yo
 You can use `ADOFAIprint()` to directly output the level in the `.adofai` format, except for the random extra commas in the actions.
 """
 
-import json, os, re, sys
+import json, os, sys
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from adofaihelper.constants import *
