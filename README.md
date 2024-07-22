@@ -54,9 +54,9 @@ import adofaihelper
 
 #### 返回值
 
-| 字段名 | 数据类型 | 默认值 | 说明 |
-| ----- | ------- | ----- | --- |
-| `level` | ADOFAI | - | adofai关卡的ADOFAI类 |
+| 字段名 | 数据类型 | 说明 |
+| ----- | ------- | --- |
+| `level` | ADOFAI | adofai关卡的ADOFAI类 |
 
 ### `ADOFAI_read` 读取adofai文件
 
@@ -68,9 +68,9 @@ import adofaihelper
 
 #### 返回值
 
-| 字段名 | 数据类型 | 默认值 | 说明 |
-| ----- | ------- | ----- | --- |
-| `adofai_content` | dict | - | adofai文件内容 |
+| 字段名 | 数据类型 | 说明 |
+| ----- | ------- | --- |
+| `adofai_content` | dict | adofai文件内容 |
 
 ### `ADOFAI_print` 输出adofai文件
 
@@ -94,7 +94,9 @@ import adofaihelper
 
 #### 返回值
 
-（唤起tk窗口）adofai文件路径
+| 字段名 | 数据类型 | 说明 |
+| ----- | ------- | --- |
+| `FILE_PATH` | string | （唤起tk窗口）adofai文件路径 |
 
 ### `SaveAsPath` 获取adofai文件保存路径
 
@@ -104,7 +106,9 @@ import adofaihelper
 
 #### 返回值
 
-（唤起tk窗口）adofai文件保存路径
+| 字段名 | 数据类型 | 说明 |
+| ----- | ------- | --- |
+| `FILE_PATH` | string | （唤起tk窗口）adofai文件保存路径 |
 
 ### `path_split` 拆分文件路径
 
