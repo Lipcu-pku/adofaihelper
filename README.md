@@ -133,17 +133,17 @@ import adofaihelper
 
 #### 返回值
 
-| 字段名 | 数据类型 | 默认值 | 说明 |
-| ----- | ------- | ----- | --- |
-| `angleData` | array | - | angleData |
+| 字段名 | 数据类型 | 说明 |
+| ----- | ------- |  --- |
+| `angleData` | array | angleData |
 
 ### `SortActions` 将actions重新排序
 
 #### 参数
 
-| 字段名         | 数据类型  | 说明   |
-| ------------ | ----- | ------ |
-| `actions` | array | adofai文件中`"actions"`对应的值 |
+| 字段名 | 数据类型 | 默认值 |  说明   |
+| ------------ | ----- | --- | ------ |
+| `actions` | array | - | adofai文件中`"actions"`对应的值 |
 
 #### 返回值
 
@@ -161,9 +161,9 @@ import adofaihelper
 
 #### 返回值
 
-| 字段名 | 数据类型 | 默认值 | 说明 |
-| ----- | ------- | ----- | --- |
-| `content` | string | - | 清除格式后的字符串 |
+| 字段名 | 数据类型 |  说明 |
+| ----- | ------- | --- |
+| `content` | string | 清除格式后的字符串 |
 
 ### `boolean` 布尔值转换
 
@@ -175,8 +175,8 @@ import adofaihelper
 
 #### 返回值
 
-| 字段名 | 数据类型 | 默认值 | 说明 |
-| ----- | ------- | ----- | --- |
-| `value` | boolean | - | true/false |
+| 字段名 | 数据类型 | 说明 |
+| ----- | ------- | --- |
+| `value` | boolean | true/false |
 
 <hr>
