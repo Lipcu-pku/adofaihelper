@@ -23,7 +23,7 @@ You can use `ADOFAIprint()` to directly output the level in the `.adofai` format
 import json, os
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
-
+import ctypes
 from .constants import *
 
 # Prohibit calls to the following funcs
@@ -175,6 +175,9 @@ def AskForPath() -> str:
         .adofai file path
     """
     root = Tk()
+    ctypes.windll.shcore.SetProcessDpiAwareness(1)
+    ScaleFactor=ctypes.windll.shcore.GetScaleFactorForDevice(0)
+    root.tk.call('tk', 'scaling', ScaleFactor/75)
     root.withdraw()
     return askopenfilename(filetypes=[("ADOFAI files", "*.adofai"), ("ADOFAI files", "*.ADOFAI")])
 
@@ -186,6 +189,9 @@ def SaveAsPath() -> str:
         .adofai file path
     """
     root = Tk()
+    ctypes.windll.shcore.SetProcessDpiAwareness(1)
+    ScaleFactor=ctypes.windll.shcore.GetScaleFactorForDevice(0)
+    root.tk.call('tk', 'scaling', ScaleFactor/75)
     root.withdraw()
     return asksaveasfilename(filetypes=[("ADOFAI files", "*.adofai"), ("ADOFAI files", "*.ADOFAI")])
 
