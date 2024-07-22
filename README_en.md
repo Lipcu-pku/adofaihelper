@@ -54,9 +54,9 @@ import adofaihelper
 
 #### Returns
 
-| Name | Type | Default | Description |
-| ----- | ------- | ----- | --- |
-| `level` | ADOFAI | - | ADOFAI of the .adofai file |
+| Name | Type | Description |
+| ----- | ------- | --- |
+| `level` | ADOFAI | ADOFAI of the .adofai file |
 
 ### `ADOFAI_read` Reading the .adofai file
 
@@ -68,9 +68,9 @@ import adofaihelper
 
 #### Returns
 
-| Name | Type | Default | Description |
-| ----- | ------- | ----- | --- |
-| `adofai_content` | dict | - | .adofai content |
+| Name | Type | Description |
+| ----- | ------- | --- |
+| `adofai_content` | dict | .adofai content |
 
 ### `ADOFAI_print` Output the .adofai file
 
@@ -94,9 +94,9 @@ None
 
 #### Returns
 
-| Name | Type | Default | Description |
-| ----- | ------- | ----- | --- |
-| `FILE_PATH` | string | - | (call a tk window and select) the .adofai file path |
+| Name | Type | Description |
+| ----- | ------- | --- |
+| `FILE_PATH` | string | (call a tk window and select) the .adofai file path |
 
 ### `SaveAsPath` Get .adofai saving path
 
@@ -106,9 +106,9 @@ None
 
 #### Returns
 
-| Name | Type | Default | Description |
-| ----- | ------- | ----- | --- |
-| `FILE_PATH` | string | - | (call a tk window and select) the .adofai file saving path |
+| Name | Type | Description |
+| ----- | ------- | --- |
+| `FILE_PATH` | string | (call a tk window and select) the .adofai file saving path |
 
 ### `path_split` Splitting the file path
 
@@ -121,8 +121,8 @@ None
 
 #### Returns
 
-| Name | Type | Default | Description |
-| ----- | ------- | ----- | --- |
+| Name | Type | Description |
+| ----- | ------- | --- |
 | `level_dir` | string | folder path of the file |
 | `level_name` | string | file name of the file |
 | `extension` | string | file extension name |
@@ -137,9 +137,9 @@ None
 
 #### Returns
 
-| Name | Type | Default | Description |
-| ----- | ------- | ----- | --- |
-| `angleData` | array | - | angleData |
+| Name | Type | Description |
+| ----- | ------- | --- |
+| `angleData` | array | angleData |
 
 ### `SortActions` Sort the actions
 
@@ -151,8 +151,8 @@ None
 
 #### Returns
 
-| Name | Type | Default | Description |
-| ----- | ------- | ----- | --- |
+| Name | Type | Description |
+| ----- | ------- | ----- |
 | `actions` | array | actions sorted by `"floor"` |
 
 ### `clearFormat` Clear the format of the string
@@ -165,9 +165,9 @@ None
 
 #### Returns
 
-| Name | Type | Default | Description |
-| ----- | ------- | ----- | --- |
-| `content` | string | - | clear formatted string |
+| Name | Type | Description |
+| ----- | ------- | --- |
+| `content` | string | clear formatted string |
 
 ### `boolean` Boolean value converting
 
@@ -179,8 +179,8 @@ None
 
 #### Returns
 
-| Name | Type | Default | Description |
-| ----- | ------- | ----- | --- |
-| `value` | boolean | - | true/false |
+| Name | Type | Description |
+| ----- | ------- | --- |
+| `value` | boolean |  true/false |
 
 <hr>
