@@ -287,8 +287,7 @@ def boolean(value: any) -> bool:
 
 class ADOFAI:
     def __init__(self, adofai_data : dict):
-        self.pathData = adofai_data.get("pathData", "")
-        self.angleData = adofai_data.get("angleData", [])
+        self.angleData = adofai_data.get("angleData", pathData_to_angleData(adofai_data.get("pathData", "")))
         self.settings = self.DynamicObject(adofai_data.get("settings", {}))
         self.actions = [self.DynamicObject(action) for action in adofai_data.get("actions", [])]
         self.decorations = [self.DynamicObject(decoration) for decoration in adofai_data.get("decorations", [])]
