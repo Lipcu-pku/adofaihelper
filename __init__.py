@@ -193,7 +193,7 @@ def SaveAsPath(default_name: str|None = None) -> str:
     ScaleFactor=ctypes.windll.shcore.GetScaleFactorForDevice(0)
     root.tk.call('tk', 'scaling', ScaleFactor/75)
     root.withdraw()
-    return asksaveasfilename(filetypes=[("ADOFAI files", "*.adofai"), ("ADOFAI files", "*.ADOFAI")], title=default_name)
+    return asksaveasfilename(filetypes=[("ADOFAI files", "*.adofai"), ("ADOFAI files", "*.ADOFAI")], initialfile=default_name)
 
 def path_split(FILE_PATH: str) -> tuple:
     """
