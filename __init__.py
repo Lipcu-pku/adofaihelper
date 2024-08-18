@@ -20,11 +20,11 @@ You can use `SortActions()` to sort the actions in the order of the floor, as yo
 You can use `ADOFAIprint()` to directly output the level in the `.adofai` format, except for the random extra commas in the actions.
 """
 
-import json, os
+import json, os, re
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 import ctypes
-from .constants import *
+# from constants import *
 
 # Prohibit calls to the following funcs
 
@@ -181,7 +181,7 @@ def AskForPath() -> str:
     root.withdraw()
     return askopenfilename(filetypes=[("ADOFAI files", "*.adofai"), ("ADOFAI files", "*.ADOFAI")])
 
-def SaveAsPath() -> str:
+def SaveAsPath(default_name: str|None = None) -> str:
     """
     Select .adofai file saving path
 
@@ -193,7 +193,7 @@ def SaveAsPath() -> str:
     ScaleFactor=ctypes.windll.shcore.GetScaleFactorForDevice(0)
     root.tk.call('tk', 'scaling', ScaleFactor/75)
     root.withdraw()
-    return asksaveasfilename(filetypes=[("ADOFAI files", "*.adofai"), ("ADOFAI files", "*.ADOFAI")])
+    return asksaveasfilename(filetypes=[("ADOFAI files", "*.adofai"), ("ADOFAI files", "*.ADOFAI")], title=default_name)
 
 def path_split(FILE_PATH: str) -> tuple:
     """
@@ -257,17 +257,18 @@ def clearFormat(content: str) -> str:
         converted '<str>'
     """
     cleared = ''
-    to_pass, to_add = False, True
-    for b in content:
-        if b == '<':
-            to_pass, to_add = True, False
-        if b == '>':
-            to_pass, to_add = True, True
-        if to_add:
-            if to_pass:
-                to_pass = False
-                continue
-            cleared += b
+    inside_tag = False
+
+    for char in content:
+        if char == '<':
+            inside_tag = True
+        elif char == '>':
+            inside_tag = False
+            continue  # 跳过 '>'
+        
+        if not inside_tag:
+            cleared += char
+
     return cleared
 
 def boolean(value: any) -> bool:
@@ -286,7 +287,7 @@ def boolean(value: any) -> bool:
         return True if value == 'Enabled' else False
 
 class ADOFAI:
-    def __init__(self, adofai_data : dict):
+    def __init__(self, adofai_data):
         self.angleData = adofai_data.get("angleData", pathData_to_angleData(adofai_data.get("pathData", "")))
         self.settings = self.DynamicObject(adofai_data.get("settings", {}))
         self.actions = [self.DynamicObject(action) for action in adofai_data.get("actions", [])]
@@ -322,9 +323,14 @@ class ADOFAI:
         def __setitem__(self, key, value):
             self._data[key] = value
 
+        def get(self, key, default=None):
+            return self._data.get(key, default)
+        
+        def keys(self):
+            return self._data.keys()
+
         def __repr__(self):
             return repr(self._data)
-
 def SortActions(actions: list)->list:
     """
     To sort the `<list>` actions in the order of the floor, as in the default .adofai file
@@ -342,15 +348,14 @@ def SortActions(actions: list)->list:
     actions.sort(key = lambda x: x['floor'])
     return actions
 
-def ADOFAI_print(level: ADOFAI, path: str, info: bool = True) -> None:
+def ADOFAI_print(level: ADOFAI, FILE_PATH: str, info: bool = True) -> None:
     """
     print level in `.adofai` form
 
-    ---
     Parameters:
-        `level`: `<ADOFAI>`, level to print
-        `path`: path to print
-        `info`: some warnings and infomation. 
+        level: `<ADOFAI>`, level to print
+        FILE_PATH: path to print
+        info: some warnings and infomation. 
     """
     angleData = level.angleData
     settings = level.settings
@@ -359,7 +364,7 @@ def ADOFAI_print(level: ADOFAI, path: str, info: bool = True) -> None:
     output = f'''{{\n\t\"angleData\": {angleData},\n'''
 
     output += '\t\"settings\": \n\t{\n'
-    for setting in settings:
+    for setting in list(settings.keys()):
         space = ' ' if setting in ['version', 'legacyFlash', 'legacyCamRelativeTo', 'legacySpriteTiles', 'legacyTween'] else ''
         output += f'\t\t\"{setting}\": {json.dumps(settings[setting])}{space},\n'
     output = output.rstrip(',\n') + '\n'
@@ -368,30 +373,30 @@ def ADOFAI_print(level: ADOFAI, path: str, info: bool = True) -> None:
     output += '\t\"actions\": \n\t[\n'
     for action in actions:
         # extracomma = '' if action["eventType"] in ['SetSpeed', 'Twirl', 'SetText', 'SetHitsound', 'PlaySound', 'Hide', 'Pause', 'Hold'] else ','
-        line = '{ ' + json.dumps(action).lstrip('{').rstrip('}') + ' }'
+        line = '{ ' + json.dumps(action._data).lstrip('{').rstrip('}') + ' }'
         output += f'\t\t{line},\n'
     output = output.rstrip(',\n') + '\n'
     output += '\t],\n'
 
     output += '\t\"decorations\": \n\t[\n'
     for decoration in decorations:
-        line = '{ ' + json.dumps(decoration).lstrip('{').rstrip('}') + '  }'
+        line = '{ ' + json.dumps(decoration._data).lstrip('{').rstrip('}') + '  }'
         output += f'\t\t{line},\n'
     output = output.rstrip(',\n') + '\n'
     output += '\t]\n}'
 
     if info:
-        if os.path.exists(path):
-            if input(f'{path} already exists. Do you want to overwrite it? Yes / [No] ') == 'Yes':
-                print(output, file=open(path, 'w', encoding='utf-8-sig'))
-                print(f'Exported to {path}. ')
+        if os.path.exists(FILE_PATH):
+            if input(f'{FILE_PATH} already exists. Do you want to overwrite it? Yes / [No] ') == 'Yes':
+                print(output, file=open(FILE_PATH, 'w', encoding='utf-8-sig'))
+                print(f'Exported to {FILE_PATH}. ')
             else:
                 print('Canceled. ')
                 return
         else:
-            print(output, file=open(path, 'w', encoding='utf-8-sig'))
+            print(output, file=open(FILE_PATH, 'w', encoding='utf-8-sig'))
     else:
-        print(output, file=open(path, 'w', encoding='utf-8-sig'))
+        print(output, file=open(FILE_PATH, 'w', encoding='utf-8-sig'))
 
 def adofai(FILE_PATH: str) -> ADOFAI|None:
     """
@@ -407,4 +412,14 @@ def adofai(FILE_PATH: str) -> ADOFAI|None:
     """
     return ADOFAI(ADOFAI_read(FILE_PATH))
 
-
+def ADOFAI_TO_DICT(level: ADOFAI) -> dict:
+    angleData = level.angleData
+    settings = level.settings
+    actions = level.actions
+    decorations = level.decorations
+    return {
+        "angleData": angleData,
+        "settings": settings,
+        "actions": actions,
+        "decorations": decorations
+    }
