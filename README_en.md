@@ -102,7 +102,9 @@ None
 
 #### Params
 
-None
+| Name | Type | Default | Description |
+| ----- | ------- | ----- | --- |
+| `default_name` | string | - | default saving file name |
 
 #### Returns
 
