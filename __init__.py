@@ -328,9 +328,24 @@ class ADOFAI:
         
         def keys(self):
             return self._data.keys()
+        
+        def to_dict(self):
+            result = {}
+            for key, value in self._data.items():
+                if isinstance(value, ADOFAI.DynamicObject):
+                    result[key] = value.to_dict()
+                elif isinstance(value, list):
+                    result[key] = [
+                        item.to_dict() if isinstance(item, ADOFAI.DynamicObject) else item for item in value
+                    ]
+                else:
+                    result[key] = value
+            return result
 
         def __repr__(self):
             return repr(self._data)
+
+
 def SortActions(actions: list)->list:
     """
     To sort the `<list>` actions in the order of the floor, as in the default .adofai file
@@ -373,14 +388,20 @@ def ADOFAI_print(level: ADOFAI, FILE_PATH: str, info: bool = True) -> None:
     output += '\t\"actions\": \n\t[\n'
     for action in actions:
         # extracomma = '' if action["eventType"] in ['SetSpeed', 'Twirl', 'SetText', 'SetHitsound', 'PlaySound', 'Hide', 'Pause', 'Hold'] else ','
-        line = '{ ' + json.dumps(action._data).lstrip('{').rstrip('}') + ' }'
+        if type(action) == ADOFAI.DynamicObject:
+            line = '{ ' + json.dumps(action.to_dict()).lstrip('{').rstrip('}') + ' }'
+        else:
+            line = '{ ' + json.dumps(action).lstrip('{').rstrip('}') + ' }'
         output += f'\t\t{line},\n'
     output = output.rstrip(',\n') + '\n'
     output += '\t],\n'
 
     output += '\t\"decorations\": \n\t[\n'
     for decoration in decorations:
-        line = '{ ' + json.dumps(decoration._data).lstrip('{').rstrip('}') + '  }'
+        if type(decoration) == ADOFAI.DynamicObject:
+            line = '{ ' + json.dumps(decoration.to_dict()).lstrip('{').rstrip('}') + '  }'
+        else:
+            line = '{ ' + json.dumps(decoration).lstrip('{').rstrip('}') + '  }'
         output += f'\t\t{line},\n'
     output = output.rstrip(',\n') + '\n'
     output += '\t]\n}'
