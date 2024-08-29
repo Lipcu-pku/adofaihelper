@@ -49,6 +49,8 @@
 
 ## Usage
 
+Uploaded to PyPI: [adofaihelper](https://pypi.org/project/adofaihelper/1.1.1/)
+
 ```bash
 pip install adofaihelper
 ```
