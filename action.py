@@ -133,11 +133,11 @@ class ACTION:
             """事件类型"""
             self.speedType: SpeedType = value_to_enum(SpeedType, kwargs.get('speedType', SpeedType.Bpm))
             """速度类型"""
-            self.beatsPerMinute = kwargs.get('beatsPerMinute', 100)
+            self.beatsPerMinute : float | int = kwargs.get('beatsPerMinute', 100)
             """BPM"""
-            self.bpmMultiplier = kwargs.get('bpmMultiplier', 1)
+            self.bpmMultiplier : float | int = kwargs.get('bpmMultiplier', 1)
             """倍频"""
-            self.angleOffset = kwargs.get('angleOffset', 0)
+            self.angleOffset : float | int = kwargs.get('angleOffset', 0)
             """角度偏移"""
 
     @get_value
@@ -165,7 +165,7 @@ class ACTION:
             """事件所在砖块"""
             self.eventType = eventTypes.Gameplay.Checkpoint
             """事件类型"""
-            self.tileOffset = kwargs.get('tileOffset', 0)
+            self.tileOffset : int = kwargs.get('tileOffset', 0)
             """重置方块偏移"""
 
     @get_value
