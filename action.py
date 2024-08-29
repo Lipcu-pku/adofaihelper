@@ -122,10 +122,12 @@ class ACTION:
     @get_value
     class SetSpeed:
         """设置速度"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.Gameplay.SetSpeed
             """事件类型"""
@@ -141,10 +143,12 @@ class ACTION:
     @get_value
     class Twirl:
         """旋转"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.Gameplay.Twirl
             """事件类型"""
@@ -152,10 +156,12 @@ class ACTION:
     @get_value
     class Checkpoint:
         """检查点"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.Gameplay.Checkpoint
             """事件类型"""
@@ -165,10 +171,12 @@ class ACTION:
     @get_value
     class SetHitsound:
         """设置打拍音"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.Gameplay.SetHitsound
             """事件类型"""
@@ -182,10 +190,12 @@ class ACTION:
     @get_value
     class PlaySound:
         """设置音效"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.Gameplay.PlaySound
             """事件类型"""
@@ -201,10 +211,12 @@ class ACTION:
     @get_value
     class SetPlanetRotation:
         """设置星球轨迹"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.Gameplay.SetPlanetRotation
             """事件类型"""
@@ -218,10 +230,12 @@ class ACTION:
     @get_value
     class Pause:
         """暂停节拍"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.Gameplay.Pause
             """事件类型"""
@@ -235,10 +249,12 @@ class ACTION:
     @get_value
     class AutoPlayTiles:
         """自动播放格子"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.Gameplay.AutoPlayTiles
             """事件类型"""
@@ -252,10 +268,12 @@ class ACTION:
     @get_value
     class ScalePlanets:
         """缩放行星"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.Gameplay.ScalePlanets
             """事件类型"""
@@ -275,10 +293,12 @@ class ACTION:
     @get_value
     class ColorTrack:
         """设置轨道颜色"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.TrackEvents.ColorTrack
             """事件类型"""
@@ -310,10 +330,12 @@ class ACTION:
 
     @get_value
     class AnimateTrack:
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.TrackEvents.AnimateTrack
             """事件类型"""
@@ -330,10 +352,12 @@ class ACTION:
 
     @get_value
     class RecolorTrack:
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.TrackEvents.RecolorTrack
             """事件类型"""
@@ -370,10 +394,12 @@ class ACTION:
     @get_value
     class MoveTrack:
         """移动轨道"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.TrackEvents.MoveTrack
             """事件类型"""
@@ -409,10 +435,12 @@ class ACTION:
     @get_value
     class PositionTrack:
         """位置轨道"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.TrackEvents.PositionTrack
             """事件类型"""
@@ -441,10 +469,12 @@ class ACTION:
     @get_value
     class MoveDecorations:
         """移动装饰"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DecorationEvents.MoveDecorations
             """事件类型"""
@@ -510,10 +540,12 @@ class ACTION:
     @get_value
     class SetText:
         """设置文本"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DecorationEvents.SetText
             """事件类型"""
@@ -529,10 +561,12 @@ class ACTION:
     @get_value
     class EmitParticle:
         """发射粒子"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DecorationEvents.EmitParticle
             """事件类型"""
@@ -548,10 +582,12 @@ class ACTION:
     @get_value
     class SetParticle:
         """设置粒子"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DecorationEvents.SetParticle
             """事件类型"""
@@ -635,10 +671,12 @@ class ACTION:
     @get_value
     class SetObject:
         """设置对象"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DecorationEvents.SetObject
             """事件类型"""
@@ -707,10 +745,12 @@ class ACTION:
     @get_value
     class SetDefaultText:
         """设置默认文本"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DecorationEvents.SetDefaultText
             """事件类型"""
@@ -744,10 +784,12 @@ class ACTION:
     @get_value
     class CustomBackground:
         """设置背景"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.VisualEffects.CustomBackground
             """事件类型"""
@@ -777,10 +819,12 @@ class ACTION:
     @get_value
     class Flash:
         """闪光"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.VisualEffects.Flash
             """事件类型"""
@@ -806,10 +850,12 @@ class ACTION:
     @get_value
     class MoveCamera:
         """移动摄像头"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.VisualEffects.MoveCamera
             """事件类型"""
@@ -841,10 +887,12 @@ class ACTION:
     @get_value
     class SetFilter:
         """预设滤镜"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.VisualEffects.SetFilter
             """事件类型"""
@@ -868,10 +916,12 @@ class ACTION:
     @get_value
     class SetFilterAdvanced:
         """预设高级滤镜"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.VisualEffects.SetFilterAdvanced
             """事件类型"""
@@ -901,10 +951,12 @@ class ACTION:
     @get_value
     class HallOfMirrors:
         """镜厅"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.VisualEffects.HallOfMirrors
             """事件类型"""
@@ -918,10 +970,12 @@ class ACTION:
     @get_value
     class ShakeScreen:
         """振屏"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.VisualEffects.ShakeScreen
             """事件类型"""
@@ -943,10 +997,12 @@ class ACTION:
     @get_value
     class Bloom:
         """绽放"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.VisualEffects.Bloom
             """事件类型"""
@@ -970,10 +1026,12 @@ class ACTION:
     @get_value
     class ScreenTile:
         """平铺"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.VisualEffects.ScreenTile
             """事件类型"""
@@ -991,10 +1049,12 @@ class ACTION:
     @get_value
     class ScreenScroll:
         """卷屏"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.VisualEffects.ScreenScroll
             """事件类型"""
@@ -1008,10 +1068,12 @@ class ACTION:
     @get_value
     class SetFrameRate:
         """设置帧率"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.VisualEffects.SetFrameRate
             """事件类型"""
@@ -1025,10 +1087,12 @@ class ACTION:
     @get_value
     class RepeatEvents:
         """重复事件"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.Modifiers.RepeatEvents
             """事件类型"""
@@ -1048,10 +1112,12 @@ class ACTION:
     @get_value
     class SetConditionalEvents:
         """设置条件事件"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.Modifiers.SetConditionalEvents
             """事件类型"""
@@ -1083,10 +1149,12 @@ class ACTION:
     @get_value
     class EditorComment:
         """编辑器附注"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.Conveniences.EditorComment
             """事件类型"""
@@ -1096,10 +1164,12 @@ class ACTION:
     @get_value
     class Bookmark:
         """书签"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.Conveniences.Bookmark
             """事件类型"""
@@ -1107,10 +1177,12 @@ class ACTION:
     @get_value
     class Hold:
         """长按"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DLC.Hold
             """事件类型"""
@@ -1124,10 +1196,12 @@ class ACTION:
     @get_value
     class SetHoldSound: 
         """设置长按音效"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DLC.SetHoldSound
             """事件类型"""
@@ -1151,10 +1225,12 @@ class ACTION:
     @get_value
     class MultiPlanet:
         """多行星"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DLC.MultiPlanet
             """事件类型"""
@@ -1164,10 +1240,12 @@ class ACTION:
     @get_value
     class FreeRoam:
         """自由移动段落"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DLC.FreeRoam
             """事件类型"""
@@ -1193,10 +1271,12 @@ class ACTION:
     @get_value
     class FreeRoamTwirl:
         """自由旋转"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DLC.FreeRoamTwirl
             """事件类型"""
@@ -1206,10 +1286,12 @@ class ACTION:
     @get_value
     class FreeRoamRemove:
         """自由移除"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DLC.FreeRoamRemove
             """事件类型"""
@@ -1221,10 +1303,12 @@ class ACTION:
     @get_value
     class Hide:
         """隐藏判定/地板图标"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DLC.Hide
             """事件类型"""
@@ -1236,10 +1320,12 @@ class ACTION:
     @get_value
     class ScaleMargin:
         """定时窗口大小"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DLC.ScaleMargin
             """事件类型"""
@@ -1249,10 +1335,12 @@ class ACTION:
     @get_value
     class ScaleRadius:
         """星球半径大小"""
-        def __init__(self, **kwargs) -> None:
-            if 'floor' not in kwargs: 
-                raise KeyError('"floor" is not found in the kwargs')
-            self.floor : int = kwargs['floor']
+        def __init__(self, floor:int | None = None, **kwargs) -> None:
+            if floor is None:
+                floor = kwargs.get('floor')
+            if floor is None:
+                raise KeyError('"floor" must be provied as argument or in kwargs')
+            self.floor : int = floor
             """事件所在砖块"""
             self.eventType = eventTypes.DLC.ScaleRadius
             """事件类型"""

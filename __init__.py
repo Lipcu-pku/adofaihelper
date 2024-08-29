@@ -219,6 +219,8 @@ def pathData_to_angleData(pathData: str) -> list:
 
 class ADOFAI:
     def __init__(self, adofai_dict: dict | None = None):
+        if adofai_dict is None:
+            adofai_dict = {}
         self.angleData : List[int | float] = adofai_dict.get("angleData", pathData_to_angleData(adofai_dict.get("pathData", "")))
         self.settings : SETTINGS = SETTINGS(**adofai_dict.get('settings', {}))
         self.actions : List[Action] = [ACTION.load(**action) for action in adofai_dict.get("actions", [])]
@@ -255,9 +257,9 @@ class ADOFAI:
         output = f'''{{\n\t\"angleData\": {angleData},\n'''
 
         output += '\t\"settings\": \n\t{\n'
-        for setting in list(settings.keys()):
-            space = ' ' if setting in ['version', 'legacyFlash', 'legacyCamRelativeTo', 'legacySpriteTiles', 'legacyTween'] else ''
-            output += f'\t\t\"{setting}\": {json.dumps(settings[setting])}{space},\n'
+        for key, value in settings.items():
+            space = ' ' if key in ['version', 'legacyFlash', 'legacyCamRelativeTo', 'legacySpriteTiles', 'legacyTween'] else ''
+            output += f'\t\t\"{key}\": {json.dumps(value)}{space},\n'
         output = output.rstrip(',\n') + '\n'
         output += '\t},\n'
         

@@ -114,7 +114,7 @@ class SETTINGS:
         """背景图片循环背景"""
         self.scalingRatio : int = kwargs.get('scalingRatio', 100)
         """背景图片缩放比例（1-1000）"""
-        self.relativeTo : CAMERA_RELATIVE = value_to_enum(CAMERA_RELATIVE, kwargs.get('relativeTo', ), CAMERA_RELATIVE.LastPosition)
+        self.relativeTo : CAMERA_RELATIVE = value_to_enum(CAMERA_RELATIVE, kwargs.get('relativeTo', CAMERA_RELATIVE.Player), CAMERA_RELATIVE.LastPosition)
         """初始摄像头相对于"""
         self.position : Data_Pair.XY_Pair = Data_Pair.XY_Pair.from_tuple(kwargs.get('position', (0, 0)))
         """初始摄像头位置"""
@@ -163,7 +163,7 @@ class SETTINGS:
     def value(self) -> dict:
         d = {}
         for key, value in self.__dict__.items():
-            if isinstance(value, Enum | Data_Pair | Color):
+            if isinstance(value, Enum | DataPair | Color):
                 d[key] = value.value
             else:
                 d[key] = value
