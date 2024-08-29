@@ -40,6 +40,23 @@ def value_to_subenum(class_name, value):
     except:
         raise ValueError(f'Invalid value for class {class_name} ("{value}")')
 
+def get_value(cls):
+    """类装饰器"""
+    
+    @property
+    def value(self):
+        d = {}
+        for key, value in self.__dict__.items():
+            if isinstance(value, Enum | DataPair | Color | ParticleColor):
+                d[key] = value.value
+            else:
+                d[key] = value
+        return d
+
+    cls.value = value
+    return cls
+
+
 class Color:
     """颜色型字符串，仅接受6位或8位的十六进制数"""
     def __init__(self, value):
@@ -965,6 +982,8 @@ class Data_Pair:
             if not (isinstance(x1, float | int) and isinstance(y1, float | int) and isinstance(x2, float | int) and isinstance(y2, float | int)):
                 raise TypeError('numbers in Increasing_XY_Pair must be float or int')
             return cls(x1, y1, x2, y2)
+
+DataPair = Data_Pair.XY_Pair | Data_Pair.XY_NonePair | Data_Pair.XY_natural_Pair | Data_Pair.TilePosition | Data_Pair.Range_Pair | Data_Pair.Increasing_Range_Pair | Data_Pair.Increasing_XY_Pair
 
 class DecorationRelative(Enum):
     """装饰物相对于"""

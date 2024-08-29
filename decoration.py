@@ -1,16 +1,6 @@
 from enums import *
 
 class DECORATION:
-
-    @property
-    def value(self):
-        d = {}
-        for key, value in self.__dict__.items():
-            if isinstance(value, int | float | str | bool | NoneType):
-                d[key] = value
-            else:
-                d[key] = value.value
-        return d
     
     @classmethod
     def load(cls, eventType: str | EventTypes | None = None, **kwargs):
@@ -44,6 +34,7 @@ class DECORATION:
             case _:
                 raise ValueError(f'The eventType {eventType.name} is not a Decoration')
 
+    @get_value
     class AddDecoration:
         """添加装饰"""
         def __init__(self, **kwargs) -> None:
@@ -119,6 +110,7 @@ class DECORATION:
             self.components : str = kwargs.get('components', '')
             """组成 [关卡编辑器中不可直接编辑]"""
 
+    @get_value
     class AddText:
         """添加文本"""
         def __init__(self, **kwargs) -> None:
@@ -158,6 +150,7 @@ class DECORATION:
             self.tag : str = kwargs.get('tag', '')
             """标签"""
 
+    @get_value
     class AddObject:
         """添加对象"""
         def __init__(self, **kwargs) -> None:
@@ -236,6 +229,7 @@ class DECORATION:
             self.tag : str = kwargs.get('tag', '')
             """标签"""
 
+    @get_value
     class AddParticle:
         """添加粒子"""
         def __init__(self, **kwargs) -> None:

@@ -1,16 +1,6 @@
 from enums import *
 
 class ACTION:
-    
-    @property
-    def value(self):
-        d = {}
-        for key, value in self.__dict__.items():
-            if isinstance(value, int | float | str | bool | NoneType):
-                d[key] = value
-            else:
-                d[key] = value.value
-        return d
 
     @classmethod
     def load(cls, floor: int | None = None, eventType: str | EventTypes | None = None, **kwargs):
@@ -129,6 +119,7 @@ class ACTION:
             case _:
                 raise ValueError(f'The eventType {eventType.name} is not an Action')
 
+    @get_value
     class SetSpeed:
         """设置速度"""
         def __init__(self, **kwargs) -> None:
@@ -147,6 +138,7 @@ class ACTION:
             self.angleOffset = kwargs.get('angleOffset', 0)
             """角度偏移"""
 
+    @get_value
     class Twirl:
         """旋转"""
         def __init__(self, **kwargs) -> None:
@@ -157,6 +149,7 @@ class ACTION:
             self.eventType = eventTypes.Gameplay.Twirl
             """事件类型"""
 
+    @get_value
     class Checkpoint:
         """检查点"""
         def __init__(self, **kwargs) -> None:
@@ -169,6 +162,7 @@ class ACTION:
             self.tileOffset = kwargs.get('tileOffset', 0)
             """重置方块偏移"""
 
+    @get_value
     class SetHitsound:
         """设置打拍音"""
         def __init__(self, **kwargs) -> None:
@@ -185,6 +179,7 @@ class ACTION:
             self.hitsoundVolume : int = kwargs.get('hitsoundVolume', 100)
             """打拍声音量"""
 
+    @get_value
     class PlaySound:
         """设置音效"""
         def __init__(self, **kwargs) -> None:
@@ -203,6 +198,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class SetPlanetRotation:
         """设置星球轨迹"""
         def __init__(self, **kwargs) -> None:
@@ -219,6 +215,7 @@ class ACTION:
             self.easePartBehavior : EASE_PART_BEHAVIOR = value_to_enum(EASE_PART_BEHAVIOR, kwargs.get('easePartBehavior', EASE_PART_BEHAVIOR.Mirror))
             """缓速部分行为"""
 
+    @get_value
     class Pause:
         """暂停节拍"""
         def __init__(self, **kwargs) -> None:
@@ -235,6 +232,7 @@ class ACTION:
             self.angleCorrectionDir : int = kwargs.get('angleCorrectionDir', -1)
             """角度校正（-1, 0, 1）"""
 
+    @get_value
     class AutoPlayTiles:
         """自动播放格子"""
         def __init__(self, **kwargs) -> None:
@@ -251,6 +249,7 @@ class ACTION:
             self.safetyTiles : bool = boolean(kwargs.get('safetyTiles', False))
             """保险方块 [关卡编辑器中不可直接编辑]"""
 
+    @get_value
     class ScalePlanets:
         """缩放行星"""
         def __init__(self, **kwargs) -> None:
@@ -273,6 +272,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class ColorTrack:
         """设置轨道颜色"""
         def __init__(self, **kwargs) -> None:
@@ -308,6 +308,7 @@ class ACTION:
             self.justThisTile : bool = boolean(kwargs.get('justThisTile', False))
             """仅改变此方块"""
 
+    @get_value
     class AnimateTrack:
         def __init__(self, **kwargs) -> None:
             if 'floor' not in kwargs: 
@@ -327,6 +328,7 @@ class ACTION:
             self.beatsBehind : float | int = kwargs.get('beatsBehind', 4)
             """轨道消失动画延后节拍数"""
 
+    @get_value
     class RecolorTrack:
         def __init__(self, **kwargs) -> None:
             if 'floor' not in kwargs: 
@@ -365,6 +367,7 @@ class ACTION:
             """缓速"""
             self.eventTag : str = kwargs.get('eventTag', '')
 
+    @get_value
     class MoveTrack:
         """移动轨道"""
         def __init__(self, **kwargs) -> None:
@@ -403,6 +406,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class PositionTrack:
         """位置轨道"""
         def __init__(self, **kwargs) -> None:
@@ -434,6 +438,7 @@ class ACTION:
                 self.stickToFloors : bool = boolean(kwargs.get('stickToFloors', True))
                 """黏性方块"""
         
+    @get_value
     class MoveDecorations:
         """移动装饰"""
         def __init__(self, **kwargs) -> None:
@@ -502,6 +507,7 @@ class ACTION:
                 self.maskingBackDepth : int = kwargs.get('maskingBackDepth', False)
                 """遮罩结束深度"""
 
+    @get_value
     class SetText:
         """设置文本"""
         def __init__(self, **kwargs) -> None:
@@ -520,6 +526,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class EmitParticle:
         """发射粒子"""
         def __init__(self, **kwargs) -> None:
@@ -538,6 +545,7 @@ class ACTION:
             self.angleOffset : float | int = kwargs.get('angleOffset', 0)
             """角度偏移"""
 
+    @get_value
     class SetParticle:
         """设置粒子"""
         def __init__(self, **kwargs) -> None:
@@ -624,6 +632,7 @@ class ACTION:
                 self.rotationOverTime : Data_Pair.Increasing_Range_Pair = Data_Pair.Increasing_Range_Pair.from_tuple(kwargs.get('rotationOverTime', (0, 0)))
                 """随时间旋转"""
 
+    @get_value
     class SetObject:
         """设置对象"""
         def __init__(self, **kwargs) -> None:
@@ -695,6 +704,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class SetDefaultText:
         """设置默认文本"""
         def __init__(self, **kwargs) -> None:
@@ -731,6 +741,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class CustomBackground:
         """设置背景"""
         def __init__(self, **kwargs) -> None:
@@ -763,6 +774,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class Flash:
         """闪光"""
         def __init__(self, **kwargs) -> None:
@@ -791,6 +803,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class MoveCamera:
         """移动摄像头"""
         def __init__(self, **kwargs) -> None:
@@ -825,6 +838,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
         
+    @get_value
     class SetFilter:
         """预设滤镜"""
         def __init__(self, **kwargs) -> None:
@@ -851,6 +865,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class SetFilterAdvanced:
         """预设高级滤镜"""
         def __init__(self, **kwargs) -> None:
@@ -883,6 +898,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class HallOfMirrors:
         """镜厅"""
         def __init__(self, **kwargs) -> None:
@@ -899,6 +915,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class ShakeScreen:
         """振屏"""
         def __init__(self, **kwargs) -> None:
@@ -923,6 +940,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class Bloom:
         """绽放"""
         def __init__(self, **kwargs) -> None:
@@ -949,6 +967,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class ScreenTile:
         """平铺"""
         def __init__(self, **kwargs) -> None:
@@ -969,6 +988,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class ScreenScroll:
         """卷屏"""
         def __init__(self, **kwargs) -> None:
@@ -985,6 +1005,7 @@ class ACTION:
             self.eventTag : str = kwargs.get('eventTag', '')
             """事件标签"""
 
+    @get_value
     class SetFrameRate:
         """设置帧率"""
         def __init__(self, **kwargs) -> None:
@@ -1001,6 +1022,7 @@ class ACTION:
             self.angleOffset : float | int = kwargs.get('angleOffset', 0)
             """角度偏移"""
 
+    @get_value
     class RepeatEvents:
         """重复事件"""
         def __init__(self, **kwargs) -> None:
@@ -1023,6 +1045,7 @@ class ACTION:
             self.tag : str = kwargs.get('tag', '')
             """目标标签"""
 
+    @get_value
     class SetConditionalEvents:
         """设置条件事件"""
         def __init__(self, **kwargs) -> None:
@@ -1057,6 +1080,7 @@ class ACTION:
             self.onCheckpointTag : str = kwargs.get('onCheckpointTag', '无')
             """“重启时”标签"""
 
+    @get_value
     class EditorComment:
         """编辑器附注"""
         def __init__(self, **kwargs) -> None:
@@ -1069,6 +1093,7 @@ class ACTION:
             self.comment : str = kwargs.get('comment', "你可以在这里留下自己的评论！\n\n支持多行文本和<color=#00FF00>彩色</color>文本。")
             """评论"""
 
+    @get_value
     class Bookmark:
         """书签"""
         def __init__(self, **kwargs) -> None:
@@ -1079,6 +1104,7 @@ class ACTION:
             self.eventType = eventTypes.Conveniences.Bookmark
             """事件类型"""
 
+    @get_value
     class Hold:
         """长按"""
         def __init__(self, **kwargs) -> None:
@@ -1095,6 +1121,7 @@ class ACTION:
             self.landingAnimation : bool = boolean(kwargs.get('landingAnimation', False))
             """收尾动画"""
 
+    @get_value
     class SetHoldSound: 
         """设置长按音效"""
         def __init__(self, **kwargs) -> None:
@@ -1121,6 +1148,7 @@ class ACTION:
             self.holdSoundVolume : int = kwargs.get('holdSoundVolume', 100)
             """长按音效音量"""
         
+    @get_value
     class MultiPlanet:
         """多行星"""
         def __init__(self, **kwargs) -> None:
@@ -1133,6 +1161,7 @@ class ACTION:
             self.planets : MultiPlanets = value_to_enum(MultiPlanets, kwargs.get('planets', MultiPlanets.TwoPlanets))
             """行星数"""
 
+    @get_value
     class FreeRoam:
         """自由移动段落"""
         def __init__(self, **kwargs) -> None:
@@ -1161,6 +1190,7 @@ class ACTION:
             self.angleCorrectionDir : int = kwargs.get('angleCorrectionDir', -1)
             """角度校准（-1, 0, 1）"""
 
+    @get_value
     class FreeRoamTwirl:
         """自由旋转"""
         def __init__(self, **kwargs) -> None:
@@ -1173,6 +1203,7 @@ class ACTION:
             self.position : Data_Pair.XY_natural_Pair = Data_Pair.XY_natural_Pair.from_tuple(kwargs.get('position', (1, 0)))
             """位置偏移"""
 
+    @get_value
     class FreeRoamRemove:
         """自由移除"""
         def __init__(self, **kwargs) -> None:
@@ -1187,6 +1218,7 @@ class ACTION:
             self.size : Data_Pair.XY_natural_Pair = Data_Pair.XY_natural_Pair.from_tuple(kwargs.get('size', (1, 1)))
             """要移除的区域大小"""
 
+    @get_value
     class Hide:
         """隐藏判定/地板图标"""
         def __init__(self, **kwargs) -> None:
@@ -1201,6 +1233,7 @@ class ACTION:
             self.hideTileIcon : bool = boolean(kwargs.get('hideTileIcon', False))
             """隐藏方块图标"""
 
+    @get_value
     class ScaleMargin:
         """定时窗口大小"""
         def __init__(self, **kwargs) -> None:
@@ -1213,6 +1246,7 @@ class ACTION:
             self.scale : float | int = kwargs.get('scale', 100)
             """大小"""
 
+    @get_value
     class ScaleRadius:
         """星球半径大小"""
         def __init__(self, **kwargs) -> None:
