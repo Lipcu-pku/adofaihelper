@@ -49,7 +49,9 @@
 
 ## Usage
 
-Put it in [ProjectDir]/adofaihelper or [pythonInstallationPath]/Lib, then you can use it as a module. 
+```bash
+pip install adofaihelper
+```
 
 ```python
 import adofaihelper
