@@ -49,7 +49,9 @@
 
 ## 用法
 
-放在<项目文件夹>/adofaihelper中，或者直接放入<Python安装路径>/Lib，可以当做模组使用
+```bash
+pip install adofaihelper
+```
 
 ```python
 import adofaihelper
