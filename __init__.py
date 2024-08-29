@@ -17,16 +17,16 @@ from tkinter.filedialog import askopenfilename, asksaveasfilename
 import ctypes
 from typing import List
 
-from enums import *
-from settings import *
-from action import *
-from decoration import *
+from .enums import *
+from .settings import *
+from .action import *
+from .decoration import *
 
 __all__ = [
     'AskForPath', 'SaveAsPath', 'ADOFAI'
 ]
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 class ADOFAIDecodeError(Exception):
     """Exception raised for errors in the ADOFAI decoding process."""
