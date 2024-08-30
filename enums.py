@@ -625,34 +625,33 @@ class Data_Pair:
     """数据对类型"""
 
     class TilePosition:
-        def __new__(self, tile_position: int, tile_relativeto: TileRelative):
+        def __init__(self, tile_position: int, tile_relativeto: TileRelative):
             if not isinstance(tile_position, int):
                 raise TypeError('The first value in TilePosition must be an integer')
             if not isinstance(tile_relativeto, TileRelative):
                 raise TypeError('The second value in TilePosition must be an instance of TileRelative')
-            
-            self.tile_position = tile_position
-            self.tile_relativeto = tile_relativeto
+            self._tile_position = tile_position
+            self._tile_relativeto = tile_relativeto
         
         @property
-        def tile_position(self) -> int:
-            return self.tile_position
+        def tile_position(self) ->int:
+            return self._tile_position
         
         @tile_position.setter
         def tile_position(self, value: int):
             if not isinstance(value, int):
                 raise TypeError('The first value in TilePosition must be an integer')
-            self.tile_position = value
+            self._tile_position = value
 
         @property
         def tile_relativeto(self) -> TileRelative:
-            return self.tile_relativeto
+            return self._tile_relativeto
         
         @tile_relativeto.setter
         def tile_relativeto(self, value: TileRelative):
             if not isinstance(value, TileRelative):
                 raise TypeError('The second value in TilePosition must be an instance of TileRelative')
-            self.tile_relativeto = value
+            self._tile_relativeto = value
         
         @classmethod
         def from_int_str(cls, int_str_tuple: tuple | list):

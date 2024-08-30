@@ -26,7 +26,7 @@ __all__ = [
     'AskForPath', 'SaveAsPath', 'ADOFAI'
 ]
 
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 
 class ADOFAIDecodeError(Exception):
     """Exception raised for errors in the ADOFAI decoding process."""
@@ -259,21 +259,21 @@ class ADOFAI:
         output += '\t\"settings\": \n\t{\n'
         for key, value in settings.items():
             space = ' ' if key in ['version', 'legacyFlash', 'legacyCamRelativeTo', 'legacySpriteTiles', 'legacyTween'] else ''
-            output += f'\t\t\"{key}\": {json.dumps(value)}{space},\n'
+            output += f'\t\t\"{key}\": {json.dumps(value, ensure_ascii=False)}{space},\n'
         output = output.rstrip(',\n') + '\n'
         output += '\t},\n'
         
         output += '\t\"actions\": \n\t[\n'
         for action in actions:
             # extracomma = '' if action["eventType"] in ['SetSpeed', 'Twirl', 'SetText', 'SetHitsound', 'PlaySound', 'Hide', 'Pause', 'Hold'] else ','
-            line = '{ ' + json.dumps(action).lstrip('{').rstrip('}') + ' }'
+            line = '{ ' + json.dumps(action, ensure_ascii=False).lstrip('{').rstrip('}') + ' }'
             output += f'\t\t{line},\n'
         output = output.rstrip(',\n') + '\n'
         output += '\t],\n'
 
         output += '\t\"decorations\": \n\t[\n'
         for decoration in decorations:
-            line = '{ ' + json.dumps(decoration).lstrip('{').rstrip('}') + '  }'
+            line = '{ ' + json.dumps(decoration, ensure_ascii=False).lstrip('{').rstrip('}') + '  }'
             output += f'\t\t{line},\n'
         output = output.rstrip(',\n') + '\n'
         output += '\t]\n}'
