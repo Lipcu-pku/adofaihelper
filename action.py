@@ -116,6 +116,9 @@ class ACTION:
                 return cls.ScaleMargin(**kwargs)
             case eventTypes.DLC.ScaleRadius:
                 return cls.ScaleRadius(**kwargs)
+            case eventTypes.AddDecorations.AddDecoration | eventTypes.AddDecorations.AddText | eventTypes.AddDecorations.AddObject | eventTypes.AddDecorations.AddParticle:
+                """旧版添加装饰事件在actions中未独立"""
+                return None
             case _:
                 raise ValueError(f'The eventType {eventType.name} is not an Action')
 

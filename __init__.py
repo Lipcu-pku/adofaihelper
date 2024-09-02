@@ -26,7 +26,7 @@ __all__ = [
     'AskForPath', 'SaveAsPath', 'ADOFAI'
 ]
 
-__version__ = "1.1.2"
+__version__ = "1.1.3"
 
 class ADOFAIDecodeError(Exception):
     """Exception raised for errors in the ADOFAI decoding process."""
@@ -223,8 +223,8 @@ class ADOFAI:
             adofai_dict = {}
         self.angleData : List[int | float] = adofai_dict.get("angleData", pathData_to_angleData(adofai_dict.get("pathData", "")))
         self.settings : SETTINGS = SETTINGS(**adofai_dict.get('settings', {}))
-        self.actions : List[Action] = [ACTION.load(**action) for action in adofai_dict.get("actions", [])]
-        self.decorations : List[Decoration] = [DECORATION.load(**decoration) for decoration in adofai_dict.get("decorations", [])]
+        self.actions : List[Action] = [a := ACTION.load(**action) for action in adofai_dict.get("actions", []) if a is not None]
+        self.decorations : List[Decoration] = [DECORATION.load(**decoration) for decoration in adofai_dict.get("decorations", []) + adofai_dict.get("actions", [])]
 
     @property
     def value(self) -> dict:
