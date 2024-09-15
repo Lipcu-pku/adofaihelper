@@ -245,6 +245,4 @@ import adofaihelper
 | `decoration_dict` | dict | 添加装饰事件对应字典型 |
 
 
-帮我把这段markdown翻译为英文
-
 <hr>
