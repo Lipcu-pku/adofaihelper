@@ -49,7 +49,7 @@
 
 ## 用法
 
-已上传至PyPI: [adofaihelper](https://pypi.org/project/adofaihelper/1.1.4/)
+已上传至PyPI: [adofaihelper](https://pypi.org/project/adofaihelper/1.1.7/)
 
 ```bash
 pip install adofaihelper
