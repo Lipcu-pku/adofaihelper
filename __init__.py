@@ -26,7 +26,7 @@ __all__ = [
     'AskForPath', 'SaveAsPath', 'ADOFAI'
 ]
 
-__version__ = "1.1.3"
+__version__ = "1.1.7"
 
 class ADOFAIDecodeError(Exception):
     """Exception raised for errors in the ADOFAI decoding process."""
@@ -160,7 +160,7 @@ class ADOFAIParser:
         self.index += 1  # Skip the closing brace
         return obj
 
-def AskForPath() -> str:
+def AskForPath(filetypes=[("ADOFAI files", ("*.adofai", "*.ADOFAI"))]) -> str:
     """
     Select .adofai file
 
@@ -171,7 +171,7 @@ def AskForPath() -> str:
     ScaleFactor=ctypes.windll.shcore.GetScaleFactorForDevice(0)
     root.tk.call('tk', 'scaling', ScaleFactor/75)
     root.withdraw()
-    return askopenfilename(filetypes=[("ADOFAI files", ("*.adofai", "*.ADOFAI"))])
+    return askopenfilename(filetypes=filetypes)
 
 def SaveAsPath(default_name: str | None = None) -> str:
     """
@@ -223,8 +223,16 @@ class ADOFAI:
             adofai_dict = {}
         self.angleData : List[int | float] = adofai_dict.get("angleData", pathData_to_angleData(adofai_dict.get("pathData", "")))
         self.settings : SETTINGS = SETTINGS(**adofai_dict.get('settings', {}))
-        self.actions : List[Action] = [a := ACTION.load(**action) for action in adofai_dict.get("actions", []) if a is not None]
-        self.decorations : List[Decoration] = [DECORATION.load(**decoration) for decoration in adofai_dict.get("decorations", []) + adofai_dict.get("actions", [])]
+        
+        actions = []
+        decorations = []
+        for action in adofai_dict.get("actions", []):
+            if isinstance(a := ACTION.load(**action), Decoration):
+                decorations.append(a)
+            else:
+                actions.append(a)
+        self.actions : List[Action] = actions
+        self.decorations : List[Decoration] = decorations + [DECORATION.load(**decoration) for decoration in adofai_dict.get("decorations", [])]
 
     @property
     def value(self) -> dict:
@@ -235,13 +243,22 @@ class ADOFAI:
             "decorations": [decoration.value for decoration in self.decorations]
         }
 
+    def __repr__(self) -> str:
+        return f'ADOFAI({self.value})'
+
     def add_action(self, floor: int | None = None, eventType : str | eventTypes | None = None, **kwargs):
         action = ACTION.load(floor, eventType, **kwargs)
         self.actions.append(action)
     
-    def add_decorations(self, eventType : str | eventTypes | None = None, **kwargs):
+    def add_decoration(self, eventType : str | eventTypes | None = None, **kwargs):
         decoration = DECORATION.load(eventType, **kwargs)
         self.decorations.append(decoration)
+    
+    def add_action_from_dict(self, action_dict: dict):
+        self.add_action(**action_dict)
+    
+    def add_decoration_from_dict(self, decoration_dict: dict):
+        self.add_decoration(**decoration_dict)
 
     @property
     def as_adofai(self) -> str:
@@ -330,3 +347,6 @@ class ADOFAI:
         except ADOFAIDecodeError as e:
             print(f"Error decoding ADOFAI: {e}")
     
+    @property
+    def angles(self) -> List[int | float]:
+        """返回每一个砖块的旋转角度（考虑了旋转、中旋和三球）"""

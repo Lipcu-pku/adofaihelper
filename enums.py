@@ -1,6 +1,22 @@
-from enum import Enum
+from enum import Enum, auto
 from typing import List, Tuple, Literal
 import re
+
+class Value(float):
+    """A value of int or float"""
+    def __new__(cls, value):
+        if isinstance(value, int):
+            return value
+        elif isinstance(value, float):
+            if value.is_integer():
+                return int(value)
+            return value
+        raise TypeError(f"{type(value)} can't be converted to int or float")
+    
+    def __repr__(self):
+        if isinstance(self, int):
+            return f'{int(super().__repr__())}'
+        return super().__repr__()
 
 NoneType = type(None)
 
@@ -16,8 +32,11 @@ def boolean(value: any) -> bool:
     """
     if type(value) == bool:
         return value
-    else:
-        return True if value == 'Enabled' else False
+    if value == 'Enabled':
+        return True
+    elif value == 'Disabled':
+        return False
+    raise ValueError(f'{value} is not a valid boolean value. ')
 
 def value_to_enum(enum_class, value, *invalid_values):
     if isinstance(value, enum_class):
@@ -45,6 +64,7 @@ def get_value(cls):
     
     @property
     def value(self):
+        """将类转为字典"""
         d = {}
         for key, value in self.__dict__.items():
             if isinstance(value, Enum | DataPair | Color | ParticleColor):
@@ -52,12 +72,22 @@ def get_value(cls):
             else:
                 d[key] = value
         return d
+    
+    def __repr__(self) -> str:
+        """使类以字典形式打印"""
+        return f'{self.__class__.__name__}({self.value})'
+
+    def hasparam(cls, attr: str) -> bool:
+        """检查该类是否存在某参数"""
+        return hasattr(cls, attr)
 
     cls.value = value
+    cls.__repr__ = __repr__
+    cls.hasattr = hasparam
     return cls
 
 
-class Color:
+class Color(str):
     """颜色型字符串，仅接受6位或8位的十六进制数"""
     def __init__(self, value):
         if isinstance(value, Color):
@@ -76,7 +106,7 @@ class Color:
     def __repr__(self):
         return f'Color({self._value})'
 
-class ADOFAIBool(Enum):
+class ADOFAIBool(int, Enum):
     true = True
     false = False
 
@@ -171,7 +201,7 @@ SettingsAttr = Literal[
     'disableV15Features'
 ]
 
-class SPECIAL_ARTIST_TYPE(Enum):
+class SPECIAL_ARTIST_TYPE(str, Enum):
     """特殊授权"""
 
     NONE = 'None'
@@ -181,7 +211,7 @@ class SPECIAL_ARTIST_TYPE(Enum):
     PUBLIC = 'PublicLicense'
     """公共版权"""
 
-class HITSOUND(Enum):
+class HITSOUND(str, Enum):
     """打拍音"""
 
     Hat = 'Hat' 
@@ -192,7 +222,7 @@ class HITSOUND(Enum):
     """沙槌"""
     Sizzle = 'Sizzle'
     """镲片"""
-    Chunk = 'Chunk'
+    Chuck = 'Chuck'
     """低音底鼓"""
     ShakerLoud = 'ShakerLoud'
     """沙槌（响）"""
@@ -241,7 +271,7 @@ class HITSOUND(Enum):
     VehicleNegative = 'VehicleNegative'
     """更少星球"""
 
-class TRACK_COLOR_TYPE(Enum):
+class TRACK_COLOR_TYPE(str, Enum):
     """轨道颜色类型"""
     
     Single = 'Single'
@@ -259,7 +289,7 @@ class TRACK_COLOR_TYPE(Enum):
     Volume = 'Volume'
     """音量"""
     
-class TRACK_COLOR_PULSE(Enum):
+class TRACK_COLOR_PULSE(str, Enum):
     """颜色脉冲类型"""
 
     NONE = 'None'
@@ -269,7 +299,7 @@ class TRACK_COLOR_PULSE(Enum):
     Backward = 'Backward'
     """后退"""
 
-class TRACK_STYLE(Enum):
+class TRACK_STYLE(str, Enum):
     """轨道风格"""
 
     Standard = 'Standard'
@@ -285,7 +315,7 @@ class TRACK_STYLE(Enum):
     Minimal = 'Minimal'
     """极简"""
 
-class TRACK_ANIMATION(Enum):
+class TRACK_ANIMATION(str, Enum):
     """轨道出现动画"""
 
     NONE = 'None'
@@ -307,7 +337,7 @@ class TRACK_ANIMATION(Enum):
     Rise = 'Rise'
     """升起"""
 
-class TRACK_DISAPPEAR_ANIMATION(Enum):
+class TRACK_DISAPPEAR_ANIMATION(str, Enum):
     """轨道消失动画"""
 
     NONE = 'None' 
@@ -325,7 +355,7 @@ class TRACK_DISAPPEAR_ANIMATION(Enum):
     Fade = 'Fade'
     """出现"""
 
-class DEFAULT_BG_SHAPE_TYPE(Enum):
+class DEFAULT_BG_SHAPE_TYPE(str, Enum):
     """教程背景图形"""
 
     Default = 'Default'
@@ -335,7 +365,7 @@ class DEFAULT_BG_SHAPE_TYPE(Enum):
     Disabled = 'Disabled'
     """无"""
 
-class BG_DISPLAY_MODE(Enum):
+class BG_DISPLAY_MODE(str, Enum):
     """背景图片显示格式"""
 
     FitToScreen = 'FitToScreen'
@@ -345,7 +375,7 @@ class BG_DISPLAY_MODE(Enum):
     Tiled = 'Tiled'
     """平铺"""
 
-class CAMERA_RELATIVE(Enum):
+class CAMERA_RELATIVE(str, Enum):
     """摄像头相对于"""
 
     Player = 'Player'
@@ -359,7 +389,7 @@ class CAMERA_RELATIVE(Enum):
     LastPositionNoRotation = 'LastPositionNoRotation'
     """上次位置（无旋转）"""
 
-class EASE(Enum):
+class EASE(str, Enum):
     """缓速"""
 
     Linear = 'Linear'
@@ -433,7 +463,7 @@ class EASE(Enum):
     InOutFlash = 'InOutFlash'
     """闪现缓入缓出"""
 
-class EASE_PART_BEHAVIOR(Enum):
+class EASE_PART_BEHAVIOR(str, Enum):
     """缓速部分行为"""
 
     Mirror = 'Mirror'
@@ -442,7 +472,7 @@ class EASE_PART_BEHAVIOR(Enum):
     """重复"""
 
 class eventTypes: 
-    class Gameplay(Enum):
+    class Gameplay(str, Enum):
         """玩法类"""
 
         SetSpeed = 'SetSpeed'
@@ -464,7 +494,7 @@ class eventTypes:
         ScalePlanets = 'ScalePlanets'
         """缩放行星"""
     
-    class TrackEvents(Enum):
+    class TrackEvents(str, Enum):
         """轨道类"""
 
         ColorTrack = 'ColorTrack'
@@ -478,7 +508,7 @@ class eventTypes:
         PositionTrack = 'PositionTrack'
         """位置轨道"""
     
-    class DecorationEvents(Enum):
+    class DecorationEvents(str, Enum):
         """装饰类"""
 
         MoveDecorations = 'MoveDecorations'
@@ -494,7 +524,7 @@ class eventTypes:
         SetDefaultText = 'SetDefaultText'
         """设置默认文本"""
     
-    class VisualEffects(Enum):
+    class VisualEffects(str, Enum):
         """视效类"""
 
         CustomBackground = 'CustomBackground'
@@ -520,15 +550,17 @@ class eventTypes:
         SetFrameRate = 'SetFrameRate'
         """设置帧率"""
     
-    class Modifiers(Enum):
+    class Modifiers(str, Enum):
         """调整类"""
 
         RepeatEvents = 'RepeatEvents'
         """重复事件"""
         SetConditionalEvents = 'SetConditionalEvents'
         """设置条件事件"""
+        SetInputEvent = 'SetInputEvent'
+        """设置输入事件"""
     
-    class Conveniences(Enum):
+    class Conveniences(str, Enum):
         """易用性类"""
 
         EditorComment = 'EditorComment'
@@ -536,7 +568,7 @@ class eventTypes:
         Bookmark = 'Bookmark'
         """书签"""
     
-    class DLC(Enum):
+    class DLC(str, Enum):
         """DLC类"""
 
         Hold = 'Hold'
@@ -558,7 +590,7 @@ class eventTypes:
         ScaleRadius = 'ScaleRadius'
         """星球半径大小"""
     
-    class AddDecorations(Enum):
+    class AddDecorations(str, Enum):
         """添加装饰类"""
         
         AddDecoration = 'AddDecoration'
@@ -577,13 +609,15 @@ class eventTypes:
         for e in obj
     }
 
-    @classmethod
-    def get_enum_value(cls, value_str):
-        return cls._value_to_enum[value_str]
+    def __new__(cls, value: str):
+        if value in cls._value_to_enum:
+            return cls._value_to_enum[value]
+        raise ValueError(f"'{value}' is not a valid eventType")
+
 
 EventTypes = eventTypes.Gameplay | eventTypes.TrackEvents | eventTypes.DecorationEvents | eventTypes.VisualEffects | eventTypes.Modifiers | eventTypes.Conveniences | eventTypes.DLC | eventTypes.AddDecorations
 
-class SpeedType(Enum):
+class SpeedType(str, Enum):
     """设置速度类型"""
 
     Bpm = 'Bpm'
@@ -591,7 +625,7 @@ class SpeedType(Enum):
     Multiplier = 'Multiplier'
     """倍频器"""
 
-class GameSound(Enum):
+class GameSound(str, Enum):
     """打拍音设置目标"""
 
     Hitsound = 'Hitsound'
@@ -599,7 +633,7 @@ class GameSound(Enum):
     Midspin = 'Midspin'
     """中旋击拍音效"""
 
-class Planet(Enum):
+class Planet(str, Enum):
     """行星"""
 
     FirePlanet = 'FirePlanet'
@@ -611,7 +645,7 @@ class Planet(Enum):
     All = 'All'
     """所有行星"""
 
-class TileRelative(Enum):
+class TileRelative(str, Enum):
     """轨道相对于"""
 
     ThisTile = 'ThisTile'
@@ -905,8 +939,8 @@ class Data_Pair:
 
         @property
         def value(self):
-            if self._1 < self._2:
-                raise ValueError('value1 must be equal or greater than value2')
+            if self._1 > self._2:
+                raise ValueError('value1 must be equal or smaller than value2')
             return (self._1, self._2)
 
         @classmethod
@@ -914,8 +948,8 @@ class Data_Pair:
             x, y = data_tuple[0], data_tuple[1]
             if not (isinstance(x, float | int) and isinstance(y, float | int)):
                 raise TypeError('Both values in Range_Pair must be float or int')
-            if x < y:
-                raise ValueError('value1 must be equal or greater than value2')
+            if x > y:
+                raise ValueError('value1 must be equal or smaller than value2')
             return cls(x, y)
 
     class Increasing_XY_Pair:
@@ -984,7 +1018,7 @@ class Data_Pair:
 
 DataPair = Data_Pair.XY_Pair | Data_Pair.XY_NonePair | Data_Pair.XY_natural_Pair | Data_Pair.TilePosition | Data_Pair.Range_Pair | Data_Pair.Increasing_Range_Pair | Data_Pair.Increasing_XY_Pair
 
-class DecorationRelative(Enum):
+class DecorationRelative(str, Enum):
     """装饰物相对于"""
 
     Tile = 'Tile'
@@ -1004,7 +1038,7 @@ class DecorationRelative(Enum):
     LastPosition = 'LastPosition'
     """上次位置"""
 
-class MaskType(Enum):
+class MaskType(str, Enum):
     """遮罩类型"""
 
     NONE = 'None'
@@ -1016,7 +1050,7 @@ class MaskType(Enum):
     VisibleOutsideMask = 'VisibleOutsideMask'
     """隐藏叠层"""
 
-class ParticleMode(Enum):
+class ParticleMode(str, Enum):
     """粒子模式"""
 
     Start = 'Start'
@@ -1041,7 +1075,7 @@ class ParticleColor:
                 self.gradient1 = ParticleColor.ParticleGradient(**kwargs['gradient1'])
                 self.gradient2 = ParticleColor.ParticleGradient(**kwargs['gradient2'])
     
-    class ParticleColorMode(Enum):
+    class ParticleColorMode(str, Enum):
         """粒子颜色模式"""
 
         Color = 'Color'
@@ -1061,7 +1095,7 @@ class ParticleColor:
             self.alphaKeys = [ParticleColor.ParticleGradient.AlphaKey(key) for key in kwargs['alphaKeys']]
             self.colorKeys = [ParticleColor.ParticleGradient.ColorKey(key) for key in kwargs['colorKeys']]
         
-        class GradientMode(Enum):
+        class GradientMode(str, Enum):
             """渐变类型"""
 
             Blend = 'Blend'
@@ -1134,7 +1168,7 @@ class ParticleColor:
             case _:
                 raise ValueError('Invalid mode for ParticleColor')
 
-class ParticleShapeType(Enum):
+class ParticleShapeType(str, Enum):
     """粒子形状"""
     
     Circle = 'Circle'
@@ -1142,7 +1176,7 @@ class ParticleShapeType(Enum):
     Rectangle = 'Rectangle'
     """矩形"""
 
-class ParticleArcMode(Enum):
+class ParticleArcMode(str, Enum):
     """粒子弧模式"""
 
     Random = 'Random'
@@ -1154,7 +1188,7 @@ class ParticleArcMode(Enum):
     BurstSpread = 'BurstSpread'
     """炸裂传播"""
 
-class TrackIcon(Enum):
+class TrackIcon(str, Enum):
     """轨道图标"""
 
     NONE = 'None'
@@ -1186,7 +1220,7 @@ class TrackIcon(Enum):
     Portal = 'Portal'
     """传送门"""
 
-class Plane(Enum):
+class Plane(str, Enum):
     """闪光平面"""
 
     Foreground = 'Foreground'
@@ -1194,7 +1228,7 @@ class Plane(Enum):
     Background = 'Background'
     """背景"""
 
-class Filter(Enum):
+class Filter(str, Enum):
     """滤镜"""
 
     Grayscale = 'Grayscale'
@@ -1280,7 +1314,7 @@ class Filter(Enum):
     PetalsInstant = 'PetalsInstant'
     """落花（直接）"""
 
-class AdvancedFilterName(Enum):
+class AdvancedFilterName(str, Enum):
     """高级滤镜"""
 
     AAA_SuperComputer = 'CameraFilterPack_AAA_SuperComputer'
@@ -1491,7 +1525,7 @@ class AdvancedFilterName(Enum):
     Vision_Warp = 'CameraFilterPack_Vision_Warp'
     Vision_Warp2 = 'CameraFilterPack_Vision_Warp2'
 
-class AdvancedFilterTartgetType(Enum):
+class AdvancedFilterTartgetType(str, Enum):
     """高级滤镜目标类型"""
     
     Camera = 'Camera'
@@ -1499,7 +1533,7 @@ class AdvancedFilterTartgetType(Enum):
     Decoration = 'Decoration'
     """装饰物"""
 
-class RepeatType(Enum):
+class RepeatType(str, Enum):
     """重复事件类型"""
 
     Beat = 'Beat'
@@ -1507,7 +1541,7 @@ class RepeatType(Enum):
     Floor = 'Floor'
     """方块"""
 
-class HoldSound(Enum):
+class HoldSound(str, Enum):
     """长按音效"""
 
     Fuse = 'Fuse'
@@ -1517,7 +1551,7 @@ class HoldSound(Enum):
     NONE = 'None'
     """无"""
 
-class HoldMidSoundType(Enum):
+class HoldMidSoundType(str, Enum):
     """长按中段音效类型"""
 
     Once = 'Once'
@@ -1525,7 +1559,7 @@ class HoldMidSoundType(Enum):
     Repeat = 'Repeat'
     """重复"""
 
-class HoldMidSoundTimingRelative(Enum):
+class HoldMidSoundTimingRelative(str, Enum):
     """长按中段音效延迟关联到"""
 
     Start = 'Start'
@@ -1533,7 +1567,7 @@ class HoldMidSoundTimingRelative(Enum):
     End = 'End'
     """终点方块"""
 
-class MultiPlanets(Enum):
+class MultiPlanets(str, Enum):
     """多行星"""
 
     TwoPlanets = 'TwoPlanets'
@@ -1541,7 +1575,7 @@ class MultiPlanets(Enum):
     ThreePlanets = 'ThreePlanets'
     """三星"""
 
-class BlendMode(Enum):
+class BlendMode(str, Enum):
     """混合模式"""
 
     NONE = 'None'
@@ -1559,7 +1593,7 @@ class BlendMode(Enum):
     Multiply = 'Multiply'
     """正片叠底"""
 
-class Hitbox(Enum):
+class Hitbox(str, Enum):
     """判定框"""
 
     NONE = 'None'
@@ -1569,7 +1603,7 @@ class Hitbox(Enum):
     Event = 'Event'
     """运行事件"""
 
-class HitboxTarget(Enum):
+class HitboxTarget(str, Enum):
     """判定框检查目标"""
 
     Planet = 'Planet'
@@ -1577,7 +1611,7 @@ class HitboxTarget(Enum):
     Decoration = 'Decoration'
     """装饰"""
 
-class HitboxTriggerType(Enum):
+class HitboxTriggerType(str, Enum):
     """判定框触发类型"""
 
     Once = 'Once'
@@ -1587,7 +1621,7 @@ class HitboxTriggerType(Enum):
     Repeat = 'Repeat'
     """重复"""
 
-class HitboxType(Enum):
+class HitboxType(str, Enum):
     """判定框形状"""
 
     Box = 'Box'
@@ -1597,7 +1631,7 @@ class HitboxType(Enum):
     Capsule = 'Capsule'
     """胶囊形"""
 
-class Font(Enum):
+class Font(str, Enum):
     """字体"""
 
     Default = 'Default'
@@ -1615,7 +1649,7 @@ class Font(Enum):
     TimesNewRoman = 'TimesNewRoman'
     """Times New Roman"""
 
-class ObjectType(Enum):
+class ObjectType(str, Enum):
     """对象类型"""
 
     Floor = 'Floor'
@@ -1623,7 +1657,7 @@ class ObjectType(Enum):
     Planet = 'Planet'
     """星球"""
 
-class PlanetColorType(Enum):
+class PlanetColorType(str, Enum):
     """星球颜色类型"""
 
     DefaultRed = 'DefaultRed'
@@ -1637,7 +1671,7 @@ class PlanetColorType(Enum):
     Custom = 'Custom'
     """自定义"""
 
-class TrackType(Enum):
+class TrackType(str, Enum):
     """轨道样式"""
 
     Normal = 'Normal'
@@ -1645,10 +1679,32 @@ class TrackType(Enum):
     Midspin = 'Midspin'
     """中旋"""
 
-class ParticleSimulationSpace(Enum):
+class ParticleSimulationSpace(str, Enum):
     """粒子模拟空间"""
 
     Local = 'Local'
     """本地"""
     World = 'World'
     """全局"""
+
+class InputEventTarget(str, Enum):
+    Any = 'Any'
+    """任意"""
+    Any1 = 'Any1'
+    """键盘左侧"""
+    Any2 = 'Any2'
+    """键盘右侧"""
+    Up = 'Up'
+    """上键（↑）"""
+    Down = 'Down'
+    """下键（↓）"""
+    Left = 'Left'
+    """左键（←）"""
+    Right = 'Right'
+    """右键（→）"""
+
+class InputEventState(str, Enum):
+    Down = 'Down'
+    """按键按下时"""
+    Up = 'Up'
+    """按键松开时"""
